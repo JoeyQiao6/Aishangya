@@ -1,0 +1,145 @@
+.details-box {
+  .details-img {
+    position: relative;
+    width: 20rem;
+    height: 20rem;
+    overflow: hidden;
+    // border-bottom-left-radius: 2.4rem;
+    // border-bottom-right-radius: 2.4rem;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    img {
+      width: 100%;
+    }
+
+    .back-like {
+      position: absolute;
+      top: 1.3333rem;
+      left: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 18rem;
+
+      img {
+        &:nth-child(1) {
+          width: 1.5rem;
+          height: 1.5
+          rem;
+          // font-weight: 800;
+        }
+        &:nth-child(2) {
+          width: 2rem;
+          height: 2rem;
+        }
+
+      }
+    }
+  }
+
+
+  .details-content {
+    background: rgba(63, 35, 35, 0.9);
+    // border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(2px);
+    margin-top: .4267rem;
+    padding: .5rem;
+
+    .details-name {
+      p {
+        font-size: .8533rem;
+
+        &:nth-child(1) {
+          font-weight: 600;
+          margin-bottom: .2133rem;
+          // padding-left: 0.4rem;
+        }
+
+        &:nth-child(2) {
+          color: #ffbd02;
+          font-weight: 600;
+          font-size: 1.1733rem;
+        }
+      }
+    }
+
+    .details-count {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: .4267rem 0 .8533rem 0;
+
+      .details-num {
+        font-size: .8533rem;
+      }
+    }
+
+    .details-btn {
+
+      div {
+        text-align: center;
+        border-radius: .2133rem;
+        font-size: .7467rem;
+        padding: .5333rem 0;
+
+
+        &:nth-child(1) {
+          border: 1px solid #ffbd02;
+          color: #ffbd02;
+          margin-bottom: .4267rem;
+        }
+
+        &:nth-child(2) {
+          background: #ffbd02;
+          color: #3d2021;
+        }
+
+      }
+
+    }
+
+
+
+    .details-param {
+      margin: .8533rem 0 1.7067rem 0;
+
+      p {
+        font-size: .7467rem;
+        color: #d5d5d5;
+        font-style: italic;
+        margin-bottom: .4267rem;
+
+        &:nth-child(1) {
+          color: #fff;
+          font-style: unset;
+        }
+      }
+    }
+  }
+
+}
+
+.ant-notification {
+  right: -0.8rem !important;
+  top: 21.3333rem !important;
+  position: absolute;
+}
+
+.ant-notification-notice {
+  width: 10.6667rem;
+  padding: .5333rem;
+
+  // background: #170609;
+  .ant-notification-notice-message {
+    font-size: .7467rem;
+    margin-bottom: unset;
+    color: #3d2121;
+  }
+
+  .ant-notification-notice-close {
+    top: .5333rem;
+    // width: 1.6rem;
+    right: .3067rem;
+  }
+
+}

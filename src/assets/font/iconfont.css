@@ -1,0 +1,48 @@
+@font-face {
+  font-family: "iconfont"; /* Project id  */
+  src: url('iconfont.ttf?t=1670318801141') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.icon-Duck:before {
+  content: "\e70f";
+}
+
+.icon-Cattle:before {
+  content: "\e616";
+}
+
+.icon-chicken:before {
+  content: "\e626";
+}
+
+.icon-vegetable:before {
+  content: "\e62b";
+}
+.icon-search:before {
+  content: "\e62f";
+}
+
+.icon-mall:before {
+  content: "\f0219";
+}
+
+.icon-profile:before {
+  content: "\e70b";
+}
+
+.icon-shop:before {
+  content: "\e63f";
+}
+
+.icon-home:before {
+  content: "\e621";
+}
