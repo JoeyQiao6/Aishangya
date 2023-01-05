@@ -1,13 +1,13 @@
 import './index.less';
-import React, { useState,useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import list1 from '../../assets/imgs/home/list1.png'
 import list2 from '../../assets/imgs/home/list2.png'
-import unlike1 from '../../assets/imgs/home/unlike1.svg'
+// import unlike1 from '../../assets/imgs/home/unlike1.svg'
 import unlike from '../../assets/imgs/home/unlike.svg'
-import like from '../../assets/imgs/home/like.svg'
+// import like from '../../assets/imgs/home/like.svg'
 import add from '../../assets/imgs/home/add.svg'
-import add1 from '../../assets/imgs/home/add1.svg'
+// import add1 from '../../assets/imgs/home/add1.svg'
 
 const CartContext = React.createContext();
 
@@ -55,32 +55,32 @@ const Menulist = () => {
   }
 
   return (
-    <CartContext.Provider fdcgv tvbhnhmfbf={{ cart, setCart }}>
-    <div className='list-box'>
+    <CartContext.Provider value={{ cart, setCart }}>
       <div className='list-box'>
-        {MenuData?.map((products, index) => (
-          <div className='list' key={index}>
-            <div className='list-img' onClick={() => {
-              navigate('/details')
-            }}>
-              <img src={products.img}></img>
-              <div className='like-box'>
-                <img src={unlike}></img>
+        <div className='list-box'>
+          {MenuData?.map((products, index) => (
+            <div className='list' key={index}>
+              <div className='list-img' onClick={() => {
+                navigate('/details')
+              }}>
+                <img src={products.img} alt=""></img>
+                <div className='like-box'>
+                  <img src={unlike} alt=""></img>
+                </div>
+              </div>
+              <div className='list-content-box'>
+                <div className='list-content'>
+                  <p className='list-name'>{products.name}</p>
+                  <p>￥{products.price}</p>
+                </div>
+                <div className='list-add' onClick={() => addToCart(products)}>
+                  <img src={add} alt=""></img>
+                </div>
               </div>
             </div>
-            <div className='list-content-box'>
-              <div className='list-content'>
-                <p className='list-name'>{products.name}</p>
-                <p>￥{products.price}</p>
-              </div>
-              <div className='list-add' onClick={() => addToCart(products)}>
-                <img src={add}></img>
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </CartContext.Provider>
   )
 
