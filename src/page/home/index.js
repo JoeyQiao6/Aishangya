@@ -20,7 +20,8 @@ import { Tabs } from 'antd';
 import { Carousel } from 'antd'
 import Menulist from '../../components/menulist';
 import instance from '../../service/request';
-const Home = () => {
+import {connect } from 'react-redux';
+const Home = (products) => {
   // const onChange = (currentSlide) => {
   //   console.log(currentSlide);
   // };
@@ -58,7 +59,8 @@ const Home = () => {
           <div className='category-name'><img alt='' src={Cattle}></img>
             <p>牛肉类</p></div>
           <div className='category-name'><img alt='' src={vegetable}></img>
-            <p>蔬菜类</p></div>
+            <p>蔬菜类</p>
+            </div>
         </div>
         <div className='tabs-box'>
           <Tabs
@@ -72,7 +74,11 @@ const Home = () => {
                   </div>
                 ),
                 key: 1,
-                children: <Menulist />
+                children:
+                 products.map((prod)=>(
+                  <Menulist />
+                ))
+                
               },
               {
                 label: (
@@ -98,13 +104,16 @@ const Home = () => {
               },
             ]}
           />
-
         </div>
-
       </div>
       <Footer />
-
     </>
   );
+};
+
+const mapStateToProps = (state) => {
+  return {
+    products: state.shop.products
+  }
 }
-export default Home;
+export default connect(mapStateToProps)(Home);

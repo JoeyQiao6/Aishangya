@@ -1,8 +1,7 @@
 import './index.less';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import list1 from '../../assets/imgs/home/list1.png'
-import list2 from '../../assets/imgs/home/list2.png'
+
 // import unlike1 from '../../assets/imgs/home/unlike1.svg'
 import unlike from '../../assets/imgs/home/unlike.svg'
 // import like from '../../assets/imgs/home/like.svg'
@@ -12,38 +11,7 @@ import add from '../../assets/imgs/home/add.svg'
 const CartContext = React.createContext();
 
 let MenuData = [
-  {
-    img: list1,
-    name: '甜辣鸭脖150g',
-    des: '甜辣',
-    price: '440',
-  }, {
-    img: list2,
-    name: '甜辣腐竹150g',
-    des: '甜辣',
-    price: '410',
-  }, {
-    img: list2,
-    name: '甜辣鸡爪150g',
-    des: '甜辣',
-
-    price: '430',
-  }, {
-    img: list1,
-    name: '甜辣鸡翅150g',
-    des: '甜辣',
-    price: '420',
-  }, {
-    img: list1,
-    name: '甜辣豆腐皮150g',
-    des: '甜辣',
-    price: '430',
-  }, {
-    img: list2,
-    name: '甜辣鸭舌150g',
-    des: '甜辣',
-    price: '450',
-  }
+  
 ]
 
 const Menulist = () => {

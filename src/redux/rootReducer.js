@@ -21,10 +21,12 @@
 // export const {increment,decrement,incrementByAmount} = sliceCounter.actions;
 // export default sliceCounter.reducer;
 import { combineReducers } from "redux";
-import shopReducer from './shopping/shopping-reducer'
+import shopReducer from './shopping/shopping-reducer';
+
 const rootReducer = combineReducers({
   // 接受的是对象，传递所有我们想要组合的reducers
   shop: shopReducer,
-})
+
+});
 
 export default rootReducer;
