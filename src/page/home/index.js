@@ -1,5 +1,5 @@
 import './index.less';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from '../../components/footer';
 import Personal from '../../components/personal';
 import Search from '../../components/search';
@@ -14,16 +14,21 @@ import vegetable from '../../assets/imgs/home/vegetable.svg'
 import tabs1 from '../../assets/imgs/home/tabs1.svg'
 import tabs2 from '../../assets/imgs/home/tabs2.svg'
 import tabs from '../../assets/imgs/home/tabs.svg'
-import { useNavigate } from 'react-router-dom';
-import { AndroidOutlined, AppleOutlined } from '@ant-design/icons';
+// import { useNavigate } from 'react-router-dom';
+// import { AndroidOutlined, AppleOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { Carousel } from 'antd'
 import Menulist from '../../components/menulist';
-
+import instance from '../../service/request';
 const Home = () => {
-  const onChange = (currentSlide) => {
-    console.log(currentSlide);
-  };
+  // const onChange = (currentSlide) => {
+  //   console.log(currentSlide);
+  // };
+  useEffect(() => {
+    return () => {
+      instance.get('/common/metaLand/myLandDetail')
+    }
+  })
   return (
     <>
       <Personal />
@@ -32,27 +37,27 @@ const Home = () => {
         <div className='banner' >
           <Carousel autoplay>
             <div>
-              <h3 ><img src={banner4}></img></h3>
+              <h3 ><img alt='' src={banner4}></img></h3>
             </div>
             <div>
-              <h3 ><img src={banner2}></img></h3>
+              <h3 ><img alt='' src={banner2}></img></h3>
             </div>
             <div>
-              <h3 ><img src={banner3}></img></h3>
+              <h3 ><img alt='' src={banner3}></img></h3>
             </div>
             <div>
-              <h3 ><img src={banner1}></img></h3>
+              <h3 ><img alt='' src={banner1}></img></h3>
             </div>
           </Carousel>
         </div>
         <div className='category'>
-          <div className='category-name'><img className='duck' src={Duck}></img>
+          <div className='category-name'><img alt='' className='duck' src={Duck}></img>
             <p>鸭类</p></div>
-          <div className='category-name'><img src={chicken}></img>
+          <div className='category-name'><img alt='' src={chicken}></img>
             <p>鸡类</p></div>
-          <div className='category-name'><img src={Cattle}></img>
+          <div className='category-name'><img alt='' src={Cattle}></img>
             <p>牛肉类</p></div>
-          <div className='category-name'><img src={vegetable}></img>
+          <div className='category-name'><img alt='' src={vegetable}></img>
             <p>蔬菜类</p></div>
         </div>
         <div className='tabs-box'>
@@ -62,7 +67,7 @@ const Home = () => {
               {
                 label: (
                   <div>
-                    <img src={tabs1}></img>
+                    <img alt='' src={tabs1}></img>
                     <p>推荐</p>
                   </div>
                 ),
@@ -72,7 +77,7 @@ const Home = () => {
               {
                 label: (
                   <div>
-                    <img src={tabs2}></img>
+                    <img alt='' src={tabs2}></img>
                     <p>爱尚鸭甜辣熟食</p>
                   </div>
                 ),
@@ -83,7 +88,7 @@ const Home = () => {
               {
                 label: (
                   <div>
-                    <img src={tabs}></img>
+                    <img alt='' src={tabs}></img>
                     <p>久久鸭麻辣熟食</p>
                   </div>
                 ),
@@ -97,7 +102,7 @@ const Home = () => {
         </div>
 
       </div>
-      <Footer/>
+      <Footer />
 
     </>
   );
