@@ -6,12 +6,13 @@ import Profile from './page/profile';
 import Shop from './page/shop';
 import Mall from './page/mall';
 import Detail from './page/details';
-import store from './components/menulist/store'
-import { Provider } from 'react-redux'
+import Store from './redux/store'
+// 这个Provider基本上与共享状态的上文方式相同，用这个Provider 包装 <App />
+import { Provider } from 'react-redux'; 
 
 const App = () => {
   return (
-    <Provider store={store}>
+    <Provider store={Store}>
       <Router>
         <Routes>
           <Route exact path='/' element={<Home />} ></Route>
