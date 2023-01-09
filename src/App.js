@@ -1,30 +1,36 @@
 import './App.css';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import "./common.sass";
 import Home from './page/home';
 import Profile from './page/profile';
 import Shop from './page/shop';
 import Mall from './page/mall';
 import Detail from './page/details';
-import Store from './redux/store'
 // 这个Provider基本上与共享状态的上文方式相同，用这个Provider 包装 <App />
-import { Provider } from 'react-redux'; 
-
-const App = () => {
+import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom'
+const App = (currentItem) => {
   return (
-    <Provider store={Store}>
-      <Router>
-        <Routes>
-          <Route exact path='/' element={<Home />} ></Route>
-          <Route path='/profile' element={<Profile />}></Route>
-          <Route path='/mall' element={<Mall />}></Route>
-          <Route path='/shop' element={<Shop />}></Route>
-          <Route path='/details' element={<Detail />}></Route>
-        </Routes>
-      </Router>
-    </Provider>
-
+    <Router>
+      <Routes>
+        <Route exact path='/' element={<Home />} ></Route>
+        <Route path='/profile' element={<Profile />}></Route>
+        <Route path='/mall' element={<Mall />}></Route>
+        <Route path='/shop' element={<Shop />}></Route>
+        {/* 怎么重新定位到默认页面,Redirect 用不了 */}
+        {!currentItem? (
+          <Navigate replace to="/" />
+        ) : (
+          <Route exact path='/details/:id' element={<Detail />}></Route>
+        )}
+      </Routes>
+    </Router>
   );
 }
+const mapStateToProps = (state) => {
+  return {
+    currentItem: state.shop.currentItem,
+  };
+};
+export default connect(mapStateToProps)(App);
 
-export default App;

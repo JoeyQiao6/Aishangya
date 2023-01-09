@@ -3,11 +3,13 @@ import React from 'react';
 import list1 from '../../assets/imgs/home/list1.png'
 import back from '../../assets/imgs/details/back.svg'
 import unlike from '../../assets/imgs/home/unlike.svg'
-import Count from '../../components/count';
+import { addToCart } from '../../redux/shopping/shopping-action';
+import { connect } from 'react-redux';
 import { notification } from 'antd';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/footer';
 
-const Details = () => {
+const Details = ({ currentItem, addToCart }) => {
   const navigate = useNavigate()
 
   const openNotification = () => {
@@ -22,36 +24,48 @@ const Details = () => {
   return (
     <div className="details-box">
       <div className="details-img">
-        <img src={list1}></img>
+        <img src={currentItem.img}></img>
         <div className='back-like'>
           <img src={back} onClick={() => {
-        navigate(-1)
-      }}></img>
+            navigate(-1)
+          }}></img>
           <img src={unlike}></img>
         </div>
       </div>
       <div className='details-content'>
         <div className='details-name'>
-          <p>甜辣腐竹 【爱尚鸭】</p>
-          <p>￥400</p>
+          <p>{currentItem.desTitle}</p>
+          <p>￥{currentItem.price}</p>
         </div>
         <div className='details-count'>
           <div className='details-num'>数量</div>
-          <Count />
+          {/* 這裏應該有個輸入框 */}
         </div>
         <div className='details-btn'>
-          <div type="primary" onClick={openNotification}>加入购物车</div>
+          {/* onClick={openNotification} */}
+          <div type="primary" onClick={() => openNotification(addToCart(currentItem.id))}>加入购物车</div>
           <div>立即购买</div>
         </div>
         <div className='details-param'>
           <p>产品参数:</p>
-          <p>口味：甜辣</p>
-          <p>重量: 150g</p>
-          <p>储藏方法：放在阴凉避光凉爽的地方，避免高温、潮湿及阳光直射</p>
-          <p>赏味期限：14天</p>
+          <p>口味：{currentItem.des}</p>
+          <p>重量: {currentItem.weight}</p>
+          <p>储藏方法：{currentItem.storageMethod}</p>
+          <p>赏味期限：{currentItem.time}</p>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
-export default Details;
+const mapStateToProps = (state) => {
+  return {
+    currentItem: state.shop.currentItem
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToCart: (id) => dispatch(addToCart(id))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Details);

@@ -14,13 +14,11 @@ import vegetable from '../../assets/imgs/home/vegetable.svg'
 import tabs1 from '../../assets/imgs/home/tabs1.svg'
 import tabs2 from '../../assets/imgs/home/tabs2.svg'
 import tabs from '../../assets/imgs/home/tabs.svg'
-// import { useNavigate } from 'react-router-dom';
-// import { AndroidOutlined, AppleOutlined } from '@ant-design/icons';
 import { Tabs } from 'antd';
 import { Carousel } from 'antd'
 import Menulist from '../../components/menulist';
 import instance from '../../service/request';
-import {connect } from 'react-redux';
+import { connect } from 'react-redux';
 const Home = (products) => {
   // const onChange = (currentSlide) => {
   //   console.log(currentSlide);
@@ -60,7 +58,7 @@ const Home = (products) => {
             <p>牛肉类</p></div>
           <div className='category-name'><img alt='' src={vegetable}></img>
             <p>蔬菜类</p>
-            </div>
+          </div>
         </div>
         <div className='tabs-box'>
           <Tabs
@@ -75,10 +73,11 @@ const Home = (products) => {
                 ),
                 key: 1,
                 children:
-                 products.map((prod)=>(
-                  <Menulist />
-                ))
-                
+                  <div className='list-box'>
+                    {products.products.map((prod) => (
+                      <Menulist key={prod.id} productData={prod} />
+                    ))}
+                  </div>
               },
               {
                 label: (
