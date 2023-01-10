@@ -10,7 +10,11 @@ const Shop = ({ cart }) => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-
+  useEffect(() => {
+    getDetaileByIds(cart).then(res => {
+      setCatdetail(res)
+    })
+  }, [])
   useEffect(() => {
     let items = 0;
     let price = 0;

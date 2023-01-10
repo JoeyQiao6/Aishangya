@@ -19,15 +19,19 @@ import { Carousel } from 'antd'
 import Menulist from '../../components/menulist';
 import instance from '../../service/request';
 import { connect } from 'react-redux';
-const Home = (products) => {
+import { getproducts } from '../../service/home';
+const Home = () => {
   // const onChange = (currentSlide) => {
   //   console.log(currentSlide);
   // };
+  const [products,setProducts] =useState([])
+
   useEffect(() => {
+    getproducts()
     return () => {
       instance.get('/common/metaLand/myLandDetail')
     }
-  })
+  },[])
   return (
     <>
       <Personal />
@@ -110,9 +114,5 @@ const Home = (products) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    products: state.shop.products
-  }
-}
-export default connect(mapStateToProps)(Home);
+
+export default Home;
