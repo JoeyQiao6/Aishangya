@@ -4,9 +4,12 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function (app) {
   app.use(
-    createProxyMiddleware("/common", {
-      target: "http://localhost:8830/",
-      changeOrigin: true
+    createProxyMiddleware("/apis", {
+      target: "http://43.206.189.226:9191/",
+      changeOrigin: true,
+      pathRewrite: {
+        '^/apis/': '/'
+      }
     })
   );
   // //......多个配置

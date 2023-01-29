@@ -23,9 +23,33 @@ const Home = (products) => {
   // const onChange = (currentSlide) => {
   //   console.log(currentSlide);
   // };
+
+  console.log(products)
   useEffect(() => {
     return () => {
-      instance.get('/common/metaLand/myLandDetail')
+      // 参数是数组的时候
+      const para = ["merchant_home_section_type"]
+      instance.post('/apis/common/dictionary/queryByGroupIds', para).then((val) => {
+        console.log(val)
+      })
+      // 参数是对象的时候
+      const para1 = {
+        page: 1,
+        rows: 10,
+        condition: {
+          id: "",
+          home: "",
+          title: "",
+          category: "101"
+        }
+      }
+      instance.post('/apis/common/merchantcommodity/selectByParam', para1).then((val) => {
+        console.log(val)
+      })
+      //无参数时候
+      instance.post('/apis/code').then((val) => {
+        console.log(val)
+      })
     }
   })
   return (
