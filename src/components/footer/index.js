@@ -4,21 +4,12 @@ import './index.less';
 // import profile from "../../assets/imgs/footer/profile.svg";
 // import mall from "../../assets/imgs/footer/mall.svg";
 import { NavLink } from "react-router-dom";
-import { connect } from 'react-redux';
-import React, { useState, useEffect } from 'react';
+import { connect, useSelector } from 'react-redux';
+import React from 'react';
+import { cartSelector } from "../../redux/shopping/cart"
 
-const Footer = ({cart}) => {
-  const [cartCount, setCartCount] = useState(0);
-
-  //useEffect 會一直刷新
-  useEffect(() => {
-    let count = 0;
-    cart.forEach((item) => {
-      count += item.qty;
-    });
-
-    setCartCount(count);
-  }, [cart, cartCount]);
+const Footer = ({ }) => {
+  const { cartAmount } = useSelector(cartSelector)
 
   return (
     <div className='footer-box'>
@@ -32,7 +23,7 @@ const Footer = ({cart}) => {
         <NavLink to="/shop" className="fontcolor">
           <i className='iconfont icon-shop'></i>
           <p>购物车</p></NavLink>
-        <span>{cartCount}</span>
+        <span>{cartAmount}</span>
       </div>
       <div>
         <NavLink to="/profile" className="fontcolor">
@@ -47,9 +38,4 @@ const Footer = ({cart}) => {
     </div>
   )
 }
-const mapStateToProps = (state) => {
-  return {
-    cart: state.shop.cart,
-  }
-}
-export default connect(mapStateToProps)(Footer);
+export default connect()(Footer);

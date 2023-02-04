@@ -1,46 +1,45 @@
 
 import React, { useState } from 'react';
 import './index.less';
-import { connect } from 'react-redux';
-import { adjustQty,removeFromCart  } from '../../redux/shopping/shopping-action'
+import { connect, useDispatch } from 'react-redux';
+import { adjustQty } from '../../redux/shopping/cart'
 
-// import { increment, decrement } from '../../redux/rootReducer';
-const Count = ({itemData, removeFromCart, adjustQty}) => {
-
-  const [input, setInput] = useState(itemData.qty);
+const Count = ({ itemData }) => {
+  const dispatch = useDispatch()
+  const [input, setInput] = useState(!itemData?.count ? 1 : itemData?.count);
 
   const onChangeHandler = (e) => {
-    setInput(e.target.value);
-    adjustQty(itemData.id, e.target.value)
+    const num = Number(e.target.value) > 0 ? Number(e.target.value) : 1
+    setInput(num);
+    dispatch(adjustQty(itemData, num))
   };
-  const decrement = (input) => {
-    setInput(input) > 1 ? setInput(input - 1) : setInput(1)
+  const decrement = (itemData, input) => {
+    const num = (input - 1) > 2 ? Number(input - 1) : 1
+    setInput(num)
+    dispatch(adjustQty(itemData, num))
   };
 
-  const increment = (input) =>{
-    setInput(input + 1) 
+  const increment = (itemData, input) => {
+    const num = Number(input + 1);
+    setInput(num)
+    dispatch(adjustQty(itemData, num))
   }
 
   return (
     <div className='count-box'>
-            <div onClick={() => decrement(input)}> - </div>
-            <div>
-              <input min='1'
-                type='number'
-                id='qty'
-                name='qty'
-                value={input}
-                onChange={onChangeHandler}
-              ></input>
-            </div>
-            <div onClick={() => increment(input)}> + </div>
-          </div>
+      <div onClick={() => decrement(itemData, input)}> - </div>
+      <div>
+        <input min='1'
+          type='number'
+          id='qty'
+          name='qty'
+          value={input}
+          onChange={onChangeHandler}
+        ></input>
+      </div>
+      <div onClick={() => increment(itemData, input)}> + </div>
+    </div>
   );
 }
-const mapDispatchToProps = (dispatch) => {
-  return {
-    adjustQty: (id, value) => dispatch(adjustQty(id, value)),
-    removeFromCart: (id) => dispatch(removeFromCart(id)),
-  };
-};
-export default connect(null, mapDispatchToProps)(Count);
+
+export default connect()(Count);

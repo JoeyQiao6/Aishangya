@@ -1,5 +1,5 @@
 import './index.less';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Footer from '../../components/footer';
 import Personal from '../../components/personal';
 import Search from '../../components/search';
@@ -17,41 +17,23 @@ import tabs from '../../assets/imgs/home/tabs.svg'
 import { Tabs } from 'antd';
 import { Carousel } from 'antd'
 import Menulist from '../../components/menulist';
-import instance from '../../service/request';
-import { connect } from 'react-redux';
-const Home = (products) => {
-  // const onChange = (currentSlide) => {
-  //   console.log(currentSlide);
-  // };
-
-  console.log(products)
+import { connect, useSelector, useDispatch } from 'react-redux';
+import { commodityHomeAsync, commoditySelector } from '../../redux/commodity/commodity'
+const Home = () => {
+  const dispatch = useDispatch()
+  const { products } = useSelector(commoditySelector)
+  const renderRef = useRef(true); // 防止useEffect执行两次
   useEffect(() => {
-    return () => {
-      // 参数是数组的时候
-      const para = ["merchant_home_section_type"]
-      instance.post('/apis/common/dictionary/queryByGroupIds', para).then((val) => {
-        console.log(val)
-      })
-      // 参数是对象的时候
-      const para1 = {
-        page: 1,
-        rows: 10,
-        condition: {
-          id: "",
-          home: "",
-          title: "",
-          category: "101"
-        }
-      }
-      instance.post('/apis/common/merchantcommodity/selectByParam', para1).then((val) => {
-        console.log(val)
-      })
-      //无参数时候
-      instance.post('/apis/code').then((val) => {
-        console.log(val)
-      })
+    if (renderRef.current) {
+      // 防止useEffect执行两次
+      renderRef.current = false
+      return
     }
-  })
+    if (products.length === 0) {
+      dispatch(commodityHomeAsync())
+    }
+  }, [dispatch, products])
+
   return (
     <>
       <Personal />
@@ -98,7 +80,7 @@ const Home = (products) => {
                 key: 1,
                 children:
                   <div className='list-box'>
-                    {products.products.map((prod) => (
+                    {products?.map((prod) => (
                       <Menulist key={prod.id} productData={prod} />
                     ))}
                   </div>
@@ -133,10 +115,4 @@ const Home = (products) => {
     </>
   );
 };
-
-const mapStateToProps = (state) => {
-  return {
-    products: state.shop.products
-  }
-}
-export default connect(mapStateToProps)(Home);
+export default connect()(Home);

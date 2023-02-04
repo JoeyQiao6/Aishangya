@@ -10,6 +10,7 @@ import Detail from './page/details';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
 const App = (currentItem) => {
+
   return (
     <Router>
       <Routes>
@@ -18,7 +19,7 @@ const App = (currentItem) => {
         <Route path='/mall' element={<Mall />}></Route>
         <Route path='/shop' element={<Shop />}></Route>
         {/* 怎么重新定位到默认页面,Redirect 用不了 */}
-        {!currentItem? (
+        {!currentItem ? (
           <Navigate replace to="/" />
         ) : (
           <Route exact path='/details/:id' element={<Detail />}></Route>
@@ -29,7 +30,7 @@ const App = (currentItem) => {
 }
 const mapStateToProps = (state) => {
   return {
-    currentItem: state.shop.currentItem,
+    // currentItem: state.shop.currentItem,
   };
 };
 export default connect(mapStateToProps)(App);

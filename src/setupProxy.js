@@ -1,11 +1,12 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 // 1.0以下 的版本用下面的方式引入模块
 //const proxy = require('http-proxy-middleware');
-
+const url = "http://43.206.189.226:9191/";
+const localUrl = "http://localhost:9191/"
 module.exports = function (app) {
   app.use(
     createProxyMiddleware("/apis", {
-      target: "http://43.206.189.226:9191/",
+      target: localUrl,
       changeOrigin: true,
       pathRewrite: {
         '^/apis/': '/'
