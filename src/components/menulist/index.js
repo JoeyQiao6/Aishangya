@@ -34,7 +34,7 @@ const Menulist = ({ productData }) => {
             <p className='list-name'>{productData.name}</p>
             <p>￥{productData.price}</p>
           </div>
-          <div className='list-add' onClick={() => dispatch(addToCart(productData, 1, "update"))}>
+          <div className='list-add' onClick={() => dispatch(addToCart(productData, 1))}>
             <img src={add} alt=""></img>
           </div>
         </div>

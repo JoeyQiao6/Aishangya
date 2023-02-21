@@ -8,6 +8,8 @@ npx create-react-app my-app
 2.支持Less语法
 3.集成网络请求Axios
 
+## 快速生成组件模板快捷键
+  rcf
 ## Less支持的配置
 在React脚手架构建的环境中，默认支持的是CSS和Sass/Scss
 1.执行命令：npm run eject(创建完直接执行此命令)如果 有改动原文件，例如删掉了README.md中的任何一点东西，那么就去根目录中将 .git删掉，然后重新执行命令即可
@@ -138,3 +140,35 @@ export default instance
     npm install --save react-redux
     npm install --save-dev redux-devtools-extension
     - 创建Redux流程
+     - 创建redux文件夹
+     - 创建 cart.js文件
+      - import { createSlice } from '@reduxjs/toolkit'
+      - const cartSlice = createSlice({
+        name: 'cart',
+        initialState,
+        reducers: {
+          ADD_CART: {
+          },
+          UPDATE_COUNT_CART: {
+          },
+          REMOVE_CART: {
+          },
+          RESET_TOTAL_AMOUNT: (state, { payload }) => {
+        },
+      })
+      export default cartSlice.reducer
+     - 创建 store.js文件
+       import { configureStore } from '@reduxjs/toolkit';
+       import cartReducer from './shopping/cart';
+       
+       const store = configureStore({
+         reducer: {
+           cart: cartReducer
+         },
+       });
+     - 设置index.js文件
+       import { Provider } from 'react-redux';
+       import store from './redux/store'
+       <Provider store={store}>
+         <App />
+       </Provider>

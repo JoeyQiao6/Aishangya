@@ -1,27 +1,51 @@
 import { createSlice } from '@reduxjs/toolkit'
+import list1 from '../../assets/imgs/home/list1.png'
+import list2 from '../../assets/imgs/home/list2.png'
 // import instance from '../../service/request';
 // import store from "../store"
 // const { products } = useSelector(commoditySelector)
+
+//初始状态
 const initialState = {
-  cart: {},//{id,title, descr,price,img,qty}
+  cart: {}// 商品列表
+  ,//{id,title, descr,price,img,qty}
   freight: 0,//运费
   total: 0,
-  fareLimit: 3500,
+  fareLimit: 3500, //满额包邮的条件
   fareLimit2: 5000,
   cartAmount: 0,
-  fare: {},
-  freeShippingCategory: [],
+  fare: {}, //运费计算结果
+  freeShippingCategory: [], //享受包邮的商品种类
 }
+//cartSlice 是一个 reducer，定义了一系列操作 state 的函数
+// 包括添加商品到购物车、更新商品、移除购物车的商品、重置购物车状态
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    //添加商品 ADD_CART
+    // ADD_CART 接收三个参数，分别是商品信息、商品数量和操作类型。它会将商品信息添加到购物车中，如果已经存在相同的商品，则更新商品数量。最后它会根据操作类型计算运费。
+
+    // 在 payload 中，包含了要加入购物车的商品 product、商品数量 count 和一个用于标识 action 类型的 type。
+
+    // 该 reducer 的主要功能是将商品添加到购物车中。如果 state 中已经存在这个商品，则只需更新商品的数量和总价，否则需要创建一个新的购物车条目。在这两种情况下，该 reducer 都会更新 state 中的 cart 属性。此外，如果 payload 中的 type 不是 "init"，则还会将 cart 发送到服务器以更新购物车。
+
+    // 具体而言，该 reducer 的主要执行过程如下：
+
+    // 通过 payload.product.id 构造购物车中商品的 key（key 以 "PID" 为前缀）。
+    // 检查当前购物车中是否已经存在该商品。如果是，则更新购物车中该商品的数量和总价；如果不是，则创建一个新的购物车条目。
+    // 如果 payload.type 不是 "init"，则发送购物车数据到服务器进行更新。
+    // 最后，更新 state 中的 cart 属性。
+    // 注意，这段代码中有一些被注释掉的部分，这些代码可能与将购物车发送到服务器相关。 
+
+    //payload是调用ADD_CART时传来的参数，所以这个里面是可以有好几个参数 或者是对象。
     ADD_CART: {
       reducer(state, { payload }) {
         if (payload.product) {
           const key = "PID" + payload.product.id
           let cart = {}
           if (state.cart[key] && payload.count > 0) {
+            // state.cart[key]["count"] = state.cart[key].cotunt 
             state.cart[key]["count"] += payload.count
             state.cart[key]["total"] = state.cart[key]["count"] * state.cart[key]["price"]
             cart = {
@@ -46,33 +70,38 @@ const cartSlice = createSlice({
             }
             console.log(cart)
           }
-          if (payload.type !== "init") {
-            // instance.post('/apis/youshan-m/cart/updateCart', cart).then((val) => {
-            //   if (val.data.success) {
-            //     if (state.cart[key]["id"]) {
-            //       state.cart[key]["id"] = val.data.results.id
-            //     }
-            //   }
-            // })
-          }
+          // 这个是存数据的请求
+          // if (payload.type !== "init") {
+          // instance.post('/apis/youshan-m/cart/updateCart', cart).then((val) => {
+          //   if (val.data.success) {
+          //     if (state.cart[key]["id"]) {
+          //       state.cart[key]["id"] = val.data.results.id
+          //     }
+          //   }
+          // })
+          // }
         }
       },
-      prepare(product, count, type) {
+      //对下面传过来的参数做一个封装
+      prepare(product, count) {
         return {
           payload: {
             product: product,
             count: count,
-            type: type
           }
         }
       }
     },
+    // 更新商品数量 UPDATE_COUNT_CART
+    // UPDATE_COUNT_CART 接收两个参数，分别是商品 id 和数量。它会更新购物车中指定商品的数量，并重新计算该商品的总价。
     UPDATE_COUNT_CART: {
+      //reducer是主要要执行的方法
       reducer(state, { payload }) {
         const key = "PID" + payload.pid
         state.cart[key]["count"] = payload.count
         state.cart[key]["total"] = state.cart[key]["count"] * state.cart[key]["price"]
       },
+      // 封装参数，是固定写法
       prepare(pid, count) {
         return {
           payload: {
@@ -82,6 +111,8 @@ const cartSlice = createSlice({
         }
       }
     },
+    //移除购物车的商品 REMOVE_CART
+    // REMOVE_CART 接收一个参数，即商品 id，它会从购物车中删除该商品。
     REMOVE_CART: {
       reducer(state, { payload }) {
         delete state.cart["PID" + payload.pid]
@@ -94,11 +125,15 @@ const cartSlice = createSlice({
         }
       }
     },
+    //重置购物车状态 RESET_TOTAL_AMOUNT
+    // RESET_TOTAL_AMOUNT 不接收参数，它会重置购物车状态，包括清空购物车中的商品、商品数量和总价。然后它会重新计算购物车中所有商品的数量和总价。
     RESET_TOTAL_AMOUNT: (state, { payload }) => {
       const cartOb = state.cart
       state.cartAmount = 0
       state.total = 0
+      //遍历对象
       for (const key in cartOb) {
+        //判断是否这个对象中有这个值，重新计算总数和总价格，所以每次点击添加商品时需要调用这个方法去更新值0.1
         if (Object.hasOwnProperty.call(cartOb, key)) {
           state.cartAmount += cartOb[key].count
           state.total += cartOb[key]["count"] * cartOb[key]["price"]
@@ -109,12 +144,15 @@ const cartSlice = createSlice({
 })
 
 export default cartSlice.reducer
+//cartSlice.actions 声明式引入，这样的话 ADD_CART, RESET_TOTAL_AMOUNT这些都可以在外面用，相当于有个参数
 export const { ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART } = cartSlice.actions
 export const cartSelector = (state) => state.cart;
 
-export const addToCart = (product, count, type) => {
+export const addToCart = (product, count) => {
   return async (dispatch) => {
-    dispatch(ADD_CART(product, count, type))
+    //想要调用上面声明的方法ADD_CART 就必须用dispatch
+    dispatch(ADD_CART(product, count))
+    // 接0.1
     dispatch(RESET_TOTAL_AMOUNT())
   };
 }

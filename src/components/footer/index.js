@@ -26,14 +26,14 @@ const Footer = ({ }) => {
         <span>{cartAmount}</span>
       </div>
       <div>
+        <NavLink to="/mall" className="fontcolor">
+          <i className='iconfont icon-mall'></i>
+          <p>我的收藏</p></NavLink>
+      </div>
+      <div>
         <NavLink to="/profile" className="fontcolor">
           <i className='iconfont icon-profile'></i>
           <p>我的</p></NavLink>
-      </div>
-      <div>
-        <NavLink to="/mall" className="fontcolor">
-          <i className='iconfont icon-mall'></i>
-          <p>关于</p></NavLink>
       </div>
     </div>
   )

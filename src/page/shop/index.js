@@ -6,6 +6,7 @@ import list1 from '../../assets/imgs/home/list1.png'
 import { connect, useSelector } from 'react-redux';
 import CartItem from './cartItem'
 import { cartSelector } from "../../redux/shopping/cart"
+import { Link } from "react-router-dom"
 const Shop = ({ }) => {
   const { total, cart, cartAmount } = useSelector(cartSelector)
   console.log(cart)
@@ -18,10 +19,18 @@ const Shop = ({ }) => {
       {Object.keys(cart).map((key, index) => (
         <CartItem key={index} itemData={cart[key]} />
       ))}
-      <div>
-        <div className='total-item'>共計：{cartAmount}件產品</div>
-        <div className='total-price'>￥{total}</div>
-        <div className='total-price'>結算</div>
+      <div className='total-box'>
+        <div className='total-item'>
+          <span>共</span>
+          <span> {cartAmount}43</span>
+          <span>件</span></div>
+        <div className='total-right'>
+          <div className='total-price'>
+            <span>￥</span>
+            <span>189000{total}</span>
+          </div>
+          <Link to="/confirmPay" className='total-btn'>結算</Link>
+        </div>
       </div>
       <Footer />
     </div>

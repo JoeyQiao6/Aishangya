@@ -16,5 +16,54 @@
     }
   }
 
-  
+  .total-box {
+    display: flex;
+    position: fixed;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .7467rem;
+    padding: .4267rem .8533rem 1.2rem;
+    bottom: 2.4rem;
+    right: 0;
+    width: 18.5rem;
+    background-color: #350509;
+    
+  }
+
+  .total-item {
+    span {
+      &:nth-child(2) {
+        color: #f2853c;
+        font-size: 1.0667rem;
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .total-right {
+    display: flex;
+    align-items: center;
+
+    .total-price {
+      padding-right: .4267rem;
+      span {
+        &:nth-child(2) {
+          color: #f2853c;
+          font-size: 1.0667rem;
+        }
+      }
+
+    }
+
+    .total-btn {
+      border: 1px solid #f2853c;
+      background-color: #f2853c;
+      border-radius: 2.4rem;
+      padding: .4267rem 1.7067rem;
+      font-size: .8533rem;
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
 }

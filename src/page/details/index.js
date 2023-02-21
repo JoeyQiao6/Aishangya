@@ -14,9 +14,14 @@ import { addToCart } from "../../redux/shopping/cart"
 const Details = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  //取URL的参数 
   const [para] = useState(useParams());
+  //想要用reducer页面的方法 就必须要用useSelector传参传进去
+  // commoditySelector = commoditySlice 里面有 {products: [],
+  // currentItem: null,} 所以可以拿到currentItem
   const { currentItem } = useSelector(commoditySelector);
   const renderRef = useRef(true); // 防止useEffect执行两次
+  // useEffect会一进来就会执行
   useEffect(() => {
     if (renderRef.current) {
       // 防止useEffect执行两次
@@ -27,7 +32,8 @@ const Details = () => {
     if (!currentItem) {
       dispatch(getCommodity(para.id))
     }
-  }, [dispatch, currentItem, para.id])
+  }, [dispatch, currentItem, para.id])//防抖
+  
   const openNotification = () => {
     notification.open({
       message: '添加成功，在购物车等亲',

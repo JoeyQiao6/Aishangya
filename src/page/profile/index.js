@@ -1,10 +1,48 @@
 import './index.less';
 import React from 'react';
+import Profiler from '../../assets/imgs/profile/profile.png';
+import Personal from '../../components/personal';
+import hisShopping from '../../assets/imgs/profile/hisShopping.png';
+import address from '../../assets/imgs/profile/address.png';
+import logout from '../../assets/imgs/profile/logout.png';
+import help from '../../assets/imgs/profile/help.png';
+import morethen from '../../assets/imgs/profile/morethen.png';
+import Footer from '../../components/footer';
 
-const Profile = () =>{
+
+
+const Profile = () => {
   return (
-    <div className="home">
-     profile
+    <div className="profile">
+      <div className='profile-header'>
+        <img src={Profiler}></img>
+        <p>Profile</p>
+      </div>
+      <Personal />
+      <div className='profile-list'>
+        <div>
+          <div>
+            <img src={hisShopping}></img>
+            <p>历史购买记录</p></div>
+          <img src={morethen}></img>
+        </div>
+        <div> <div>
+          <img src={address}></img>
+          <p>地址管理</p></div>
+          <img src={morethen}></img>
+        </div>
+        <div> <div>
+          <img src={help}></img>
+          <p>帮助中心</p></div>
+          <img src={morethen}></img>
+        </div>
+        <div> <div>
+          <img src={logout}></img>
+          <p>登出</p></div>
+          <img src={morethen}></img>
+        </div>
+      </div>
+      <Footer/>
     </div>
   );
 }

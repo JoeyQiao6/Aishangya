@@ -19,6 +19,7 @@ import { Carousel } from 'antd'
 import Menulist from '../../components/menulist';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { commodityHomeAsync, commoditySelector } from '../../redux/commodity/commodity'
+
 const Home = () => {
   const dispatch = useDispatch()
   const { products } = useSelector(commoditySelector)
@@ -30,7 +31,13 @@ const Home = () => {
       return
     }
     if (products.length === 0) {
-      dispatch(commodityHomeAsync())
+      const para = {
+        id: "",
+        home: "",
+        title: "",
+        category: ""
+      }
+      dispatch(commodityHomeAsync(para))
     }
   }, [dispatch, products])
 
