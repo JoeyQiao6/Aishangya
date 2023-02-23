@@ -1,19 +1,18 @@
 import './index.less';
 import Footer from '../../components/footer';
 import backW from '../../assets/imgs/details/back-w.svg'
-import React, { useState, useEffect } from 'react';
-import list1 from '../../assets/imgs/home/list1.png'
+import React from 'react';
 import { connect, useSelector } from 'react-redux';
 import CartItem from './cartItem'
 import { cartSelector } from "../../redux/shopping/cart"
 import { Link } from "react-router-dom"
-const Shop = ({ }) => {
+const Shop = () => {
   const { total, cart, cartAmount } = useSelector(cartSelector)
   console.log(cart)
   return (
     <div className="shop-box">
       <div className="shop-back">
-        <img src={backW}></img>
+        <img src={backW} alt=""></img>
         <p>购物车</p>
       </div>
       {Object.keys(cart).map((key, index) => (

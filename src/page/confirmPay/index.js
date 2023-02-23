@@ -11,13 +11,13 @@ const ConfirmPay = () => {
   return (
     <div className='ConfirmPay-box'>
       <div className='CP-header'>
-        <img src={backW}></img>
+        <img src={backW} alt=""></img>
         <p>确认订单</p>
       </div>
       <div className='CP-body'>
         <div className='address-box'>
           <div className='address-left'>
-            <img src={address}></img>
+            <img src={address} alt=""></img>
             <div className='address-infor'>
               <p>埼玉县川口市芝园町3-9-112</p>
               <span>乔乔</span>
@@ -25,17 +25,17 @@ const ConfirmPay = () => {
             </div>
           </div>
           <div className='address-right'>
-            <img src={morethen}></img>
+            <img src={morethen} alt=""></img>
           </div>
         </div>
         <div className='paymentMethod-box'>
           <div className='PM-left'>
-            <img src={pay}></img>
+            <img src={pay} alt=""></img>
             <p>支付方式</p>
           </div>
           <div className='PM-right'>
             <p>请选择</p>
-            <img src={morethen}></img>
+            <img src={morethen} alt=""></img>
           </div>
         </div>
         <div className='point-box'>
@@ -57,7 +57,7 @@ const ConfirmPay = () => {
               <p>可用积分: 1000</p>
               <div>
                 <p>使用积分</p>
-                <img src={choose}></img>
+                <img src={choose} alt=""></img>
               </div>
             </div></div>
 

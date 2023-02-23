@@ -8,7 +8,7 @@ import { connect, useSelector } from 'react-redux';
 import React from 'react';
 import { cartSelector } from "../../redux/shopping/cart"
 
-const Footer = ({ }) => {
+const Footer = () => {
   const { cartAmount } = useSelector(cartSelector)
 
   return (

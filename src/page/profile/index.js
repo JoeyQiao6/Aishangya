@@ -15,34 +15,34 @@ const Profile = () => {
   return (
     <div className="profile">
       <div className='profile-header'>
-        <img src={Profiler}></img>
+        <img src={Profiler} alt=""></img>
         <p>Profile</p>
       </div>
       <Personal />
       <div className='profile-list'>
         <div>
           <div>
-            <img src={hisShopping}></img>
+            <img src={hisShopping} alt=""></img>
             <p>历史购买记录</p></div>
-          <img src={morethen}></img>
+          <img src={morethen} alt=""></img>
         </div>
         <div> <div>
-          <img src={address}></img>
+          <img src={address} alt=""></img>
           <p>地址管理</p></div>
-          <img src={morethen}></img>
+          <img src={morethen} alt=""></img>
         </div>
         <div> <div>
-          <img src={help}></img>
+          <img src={help} alt=""></img>
           <p>帮助中心</p></div>
-          <img src={morethen}></img>
+          <img src={morethen} alt=""></img>
         </div>
         <div> <div>
-          <img src={logout}></img>
+          <img src={logout} alt=""></img>
           <p>登出</p></div>
-          <img src={morethen}></img>
+          <img src={morethen} alt=""></img>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

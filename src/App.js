@@ -11,7 +11,7 @@ import Register from './page/register';
 import ConfirmPay from './page/confirmPay';
 // 这个Provider基本上与共享状态的上文方式相同，用这个Provider 包装 <App />
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom'
+// import { Redirect } from 'react-router-dom'
 const App = (currentItem) => {
 
   return (

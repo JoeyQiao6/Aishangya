@@ -1,7 +1,7 @@
 import React from 'react';
 import './index.less';
 import logo from "../../assets/imgs/profile/logo1.png";
-import { LockOutlined, UserOutlined,MailOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from 'antd';
 import picture from "../../assets/imgs/login/picture.png"
 import edit from "../../assets/imgs/login/edit.png"
@@ -14,11 +14,11 @@ const Login = () => {
   return (
     <div className='register'>
       <div className='login-logo'>
-        <img src={logo}></img>
+        <img src={logo} alt=""></img>
       </div>
       <div className='login-picture'>
-        <img src={picture}></img>
-        <img src={edit}></img>
+        <img src={picture} alt=""></img>
+        <img src={edit} alt=""></img>
       </div>
       <Form
         name="normal_login"
@@ -71,7 +71,7 @@ const Login = () => {
           </Form.Item>
 
           <Link to="/Login" className="login-form-forgot" >
-          已有账号？立即登录!
+            已有账号？立即登录!
           </Link>
         </Form.Item>
 

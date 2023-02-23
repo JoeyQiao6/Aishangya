@@ -3,8 +3,6 @@ import './index.less';
 import logo from "../../assets/imgs/profile/logo1.png";
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from 'antd';
-import picture from "../../assets/imgs/login/picture.png"
-import edit from "../../assets/imgs/login/edit.png"
 import { Link } from 'react-router-dom';
 
 const Login = () => {
@@ -14,7 +12,7 @@ const Login = () => {
   return (
     <div className='login'>
       <div className='login-logo'>
-        <img src={logo}></img>
+        <img src={logo} alt=""></img>
       </div>
       <div className='weclome'>
         <p>欢迎您登录</p>
@@ -58,7 +56,7 @@ const Login = () => {
             <Checkbox>记住我</Checkbox>
           </Form.Item>
 
-          <a className="login-form-forgot" href="">
+          <a className="login-form-forgot" href="/">
             忘记密码?
           </a>
         </Form.Item>
