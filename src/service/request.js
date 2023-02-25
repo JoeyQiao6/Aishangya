@@ -7,7 +7,7 @@ const instance = axios.create({
 // 1、发送请求之前，加载一些组件
 // 2、某些请求需要携带token，如果说没有没有携带，直接跳转到登录页面
 instance.interceptors.request.use((config) => {
-    console.log('被拦截做的一些操作')
+    console.log('被拦截做的一些操作1')
     return config
 }, err => {
     return err
@@ -15,6 +15,17 @@ instance.interceptors.request.use((config) => {
 
 // 响应拦截器
 instance.interceptors.response.use((res) => {
+    console.log('被拦截做的一些操作2', res)
+    if (!res.data.success) {
+        switch (res.data.results) {
+            case "logout":
+                console.log('请登录')
+                window.location.href = "/#/login"
+                break
+            default:
+                console.log('其他信息错误')
+        }
+    }
     return res
 }, err => {
     if (err && err.response) {
