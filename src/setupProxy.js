@@ -6,7 +6,7 @@ const localUrl = "http://localhost:9191/"
 module.exports = function (app) {
   app.use(
     createProxyMiddleware("/apis", {
-      target: url,
+      target: localUrl,
       changeOrigin: true,
       pathRewrite: {
         '^/apis/': '/'

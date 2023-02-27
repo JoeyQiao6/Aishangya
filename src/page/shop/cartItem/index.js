@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './index.less';
 import { connect, useDispatch } from 'react-redux';
 import Count from '../../../components/count';
 import { adjustQty } from '../../../redux/shopping/shopping-action'
 import { removeFromCart } from "../../../redux/shopping/cart"
-const CartItem = ({ itemData, adjustQty }) => {
+const CartItem = ({ itemData }) => {
   const dispatch = useDispatch()
   // const [input, setInput] = useState(itemData.qty);
 
@@ -25,7 +25,7 @@ const CartItem = ({ itemData, adjustQty }) => {
   // }
   return (
     <div className="shop-list-box">
-      <div className='shop-img'><img src={itemData.img}></img>
+      <div className='shop-img'><img src={itemData.img} alt=""></img>
       </div>
       <div className="shop-des">
         <div className="shop-name-remove"> <p>{itemData.name}</p>

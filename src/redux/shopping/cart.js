@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import list1 from '../../assets/imgs/home/list1.png'
-import list2 from '../../assets/imgs/home/list2.png'
 // import instance from '../../service/request';
 // import store from "../store"
 // const { products } = useSelector(commoditySelector)
