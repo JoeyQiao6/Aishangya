@@ -12,7 +12,7 @@ npx create-react-app my-app
   rcf
 ## Less支持的配置
 在React脚手架构建的环境中，默认支持的是CSS和Sass/Scss
-1.执行命令：npm run eject(创建完直接执行此命令)如果 有改动原文件，例如删掉了README.md中的任何一点东西，那么就去根目录中将 .git删掉，然后重新执行命令即可
+1.执行命令：npm run eject(创建完直接执行此命令)如果有改动原文件，例如删掉了README.md中的任何一点东西，那么就去根目录中将 .git删掉，然后重新执行命令即可
 
 注意：执行完命令后 如果不能成功运行则删掉 node_modules，然后重新删除
 
