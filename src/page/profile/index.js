@@ -8,10 +8,17 @@ import logout from '../../assets/imgs/profile/logout.png';
 import help from '../../assets/imgs/profile/help.png';
 import morethen from '../../assets/imgs/profile/morethen.png';
 import Footer from '../../components/footer';
+import instance from '../../service/request';
 
 
 
 const Profile = () => {
+  const logoutfunc = () => {
+    instance.post("/apis/logout").then(() => {
+      window.location.href = "/#/login"
+      window.location.reload()
+    })
+  }
   return (
     <div className="profile">
       <div className='profile-header'>
@@ -36,7 +43,7 @@ const Profile = () => {
           <p>帮助中心</p></div>
           <img src={morethen} alt=""></img>
         </div>
-        <div> <div>
+        <div> <div onClick={() => { logoutfunc() }}>
           <img src={logout} alt=""></img>
           <p>登出</p></div>
           <img src={morethen} alt=""></img>
