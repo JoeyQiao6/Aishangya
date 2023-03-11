@@ -24,7 +24,7 @@ const Menulist = ({ productData }) => {
         <div className='list-img' onClick={() => {
           navigate(`/details/${productData.id}`)
         }}>
-          <img src={productData.img} alt=""></img>
+          <img src={productData.image} alt=""></img>
           <div className='like-box'>
             <img src={unlike} alt=""></img>
           </div>

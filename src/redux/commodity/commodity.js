@@ -22,9 +22,9 @@ export const commoditySlice = createSlice({
   initialState,
   reducers: {
     SET_PRODUCTS: (state, { payload }) => {
-      state.products = payload
+      state.products = state.products.concat(payload)
     },
-    SET_CURRENTITEM:(state, { payload }) =>{
+    SET_CURRENTITEM: (state, { payload }) => {
       state.currentItem = payload
     }
   },
@@ -33,20 +33,8 @@ export const { SET_PRODUCTS, SET_CURRENTITEM } = commoditySlice.actions
 export function commodityHomeAsync(para) {
   // 同步和异步 async是异步
   return async (dispatch) => {
-    const para1 = {
-      page: 1,
-      // 这个是一页显示多少个数据
-      rows: 10,
-      //查找时 根据名字或者分类进行查找
-      condition: {
-        id: para.id,
-        home: para.home,
-        title: para.title,
-        category: para.category
-      }
-    }
     //请求后台数据的方法。面试时可以instance换成axios.post请求
-    instance.post('/apis/youshan-m/merchantcommodity/selectByParam', para1).then((val) => {
+    instance.post('/apis/youshan-m/merchantcommodity/selectByParam', para).then((val) => {
       //val是后端返回来的数据
       if (val.data.success) {
         val = val.data.results

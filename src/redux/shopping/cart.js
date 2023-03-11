@@ -40,11 +40,11 @@ const cartSlice = createSlice({
     ADD_CART: {
       reducer(state, { payload }) {
         if (payload.product) {
-          const key = "PID" + payload.product.id
+          const key = "PID" + payload.product.pid
+          console.log(key)
           let cart = {}
           if (state.cart[key] && payload.count > 0) {
-            // state.cart[key]["count"] = state.cart[key].cotunt 
-            state.cart[key]["count"] += payload.count
+            state.cart[key]["count"] = payload.count
             state.cart[key]["total"] = state.cart[key]["count"] * state.cart[key]["price"]
             cart = {
               id: state.cart[key]["id"],
@@ -95,7 +95,8 @@ const cartSlice = createSlice({
     UPDATE_COUNT_CART: {
       //reducer是主要要执行的方法
       reducer(state, { payload }) {
-        const key = "PID" + payload.pid
+        console.log(payload)
+        const key = "PID" + payload.id
         state.cart[key]["count"] = payload.count
         state.cart[key]["total"] = state.cart[key]["count"] * state.cart[key]["price"]
       },
@@ -155,15 +156,15 @@ export const addToCart = (product, count) => {
   };
 }
 
-export const removeFromCart = (pid) => {
+export const removeFromCart = (id) => {
   return async (dispatch) => {
-    dispatch(REMOVE_CART(pid))
+    dispatch(REMOVE_CART(id))
     dispatch(RESET_TOTAL_AMOUNT())
   };
 };
 export const adjustQty = (product, count) => {
   return async (dispatch) => {
-    dispatch(UPDATE_COUNT_CART(product.pid, count))
+    dispatch(ADD_CART(product, count))
     dispatch(RESET_TOTAL_AMOUNT())
   };
 };

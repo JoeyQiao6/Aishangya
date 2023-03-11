@@ -21,12 +21,12 @@ const Shop = () => {
       <div className='total-box'>
         <div className='total-item'>
           <span>共</span>
-          <span> {cartAmount}43</span>
+          <span> {cartAmount}</span>
           <span>件</span></div>
         <div className='total-right'>
           <div className='total-price'>
             <span>￥</span>
-            <span>189000{total}</span>
+            <span>{total}</span>
           </div>
           <Link to="/confirmPay" className='total-btn'>結算</Link>
         </div>

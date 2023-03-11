@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import './index.less';
 import instance from '../../service/request';
 const CodeImage = ({ code, width = 200, height = 100 }) => {
@@ -27,7 +27,7 @@ const CodeImage = ({ code, width = 200, height = 100 }) => {
   return <canvas ref={canvasRef} width={width} height={height} />;
 };
 
-const App = () => {
+const App = forwardRef((props, ref) => {
   const generateCode = () => {
     instance.get("/apis/code").then((val) => {
       if (val.data.success) {
@@ -46,19 +46,20 @@ const App = () => {
       return
     }
     if (code === "") { generateCode() }
-  })
 
+  })
   const handleClick = () => {
+    console.log("handleClick")
     generateCode()
   };
 
   return (
-    <div className="container" onClick={handleClick}>
+    <div className="container" onClick={handleClick} ref={ref}>
       <div className="code" ref={codeRef}>
         <CodeImage code={code} />
       </div>
     </div>
   );
-};
+});
 
 export default App;

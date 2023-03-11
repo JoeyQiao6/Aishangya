@@ -8,24 +8,26 @@ import CaptchaImage from "../../components/login/code"
 import instance from '../../service/request';
 const Login = () => {
   const renderRef = useRef(true); // 防止useEffect执行两次
+  const captchaImageRef = useRef(null);
   useEffect(() => {
     if (renderRef.current) {
       // 防止useEffect执行两次
       renderRef.current = false
       return
     }
-    instance.post("/apis/logout")
   }, [])//防抖
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
     instance.post("/apis/login", values).then((val) => {
       if (val.data.success) {
         window.location.href = "/#/"
+        window.location.reload()
       } else {
         alert(val.data.results)
+        captchaImageRef.current.click()
       }
     })
   }
+
   return (
     <div className='login'>
       <div className='login-logo'>
@@ -83,7 +85,7 @@ const Login = () => {
             placeholder="验证码"
           />
         </Form.Item>
-        <CaptchaImage />
+        <CaptchaImage ref={captchaImageRef} />
         <Form.Item>
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>记住我</Checkbox>

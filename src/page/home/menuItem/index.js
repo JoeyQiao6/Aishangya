@@ -2,28 +2,25 @@ import React from 'react';
 import './index.less';
 import { connect, useDispatch } from 'react-redux';
 import Count from '../../../components/count';
-import { removeFromCart } from "../../../redux/shopping/cart"
-const CartItem = ({ itemData }) => {
-  const dispatch = useDispatch()
-
+const CartItem = (({ itemData }) => {
+  // const dispatch = useDispatch()
+  let idata = JSON.parse(JSON.stringify(itemData));
+  idata["pid"] = idata.id
   return (
-    <div className="shop-list-box">
+    <div className="shop-list-box" >
       <div className='shop-img'><img src={itemData.image} alt=""></img>
       </div>
       <div className="shop-des">
-        <div className="shop-name-remove"> <p>{itemData.title}</p>
-          <div onClick={() => dispatch(removeFromCart(itemData.pid))}>
-            <p >移除</p></div>
-        </div>
-        <p></p>
+        <p>{itemData.title}</p>
+        <p>{itemData.total}{itemData.unit}</p>
         <p>￥{itemData.price}</p>
         <div className="shop-count">
-          <Count itemData={itemData} />
+          {itemData.total > 0 ? <Count itemData={idata} /> : "暂无产品"}
         </div>
       </div>
     </div>
   );
-}
+})
 const mapDispatchToProps = (dispatch) => {
   return {
   };
