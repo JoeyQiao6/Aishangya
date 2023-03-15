@@ -14,7 +14,9 @@ const Home = () => {
   const { products } = useSelector(commoditySelector)
   const { commodityCategory, categoryList } = useSelector(dictionarySelector)
   const renderRef = useRef(true); // 防止useEffect执行两次
-  const [page, setPage] = useState(1)
+  const [pages, setPages] = useState([0, 0])
+  const rows = 10
+  const [reqState, setReqState] = useState([false, false])
   const [scrollableDivRef] = useState([useRef(null), useRef(null)]);
   const [lodingState, setLodingState] = useState(false)
   const [categoroyIndex, setCategoryIndex] = useState(0)
@@ -22,19 +24,22 @@ const Home = () => {
   const handleScroll = () => {
     if (lodingState) return
     const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef[categoroyIndex].current;
+
     if (scrollHeight - scrollTop === clientHeight) {
       // 执行你需要的操作
-      console.log('到达底部了');
       setLodingState(true)
       setTimeout(() => {
         getProducts()
-      }, 2000);
+      }, 1000);
     }
   };
   useEffect(() => {
-    if (lodingState)
-      setLodingState(false)
-  }, [products])
+    setLodingState(false)
+    if (products.length % rows > 0) {
+      reqState[categoroyIndex] = true
+    }
+
+  }, [products.length])
   useEffect(() => {
     if (renderRef.current) {
       // 防止useEffect执行两次
@@ -49,10 +54,14 @@ const Home = () => {
     }
   }, [dispatch, categoryList])
   const getProducts = () => {
+    if (reqState[categoroyIndex]) {
+      return
+    }
+    pages[categoroyIndex] += 1
     const para = {
-      page: page,
+      page: pages[categoroyIndex],
       // 这个是一页显示多少个数据
-      rows: 10,
+      rows,
       //查找时 根据名字或者分类进行查找
       condition: {
         title: "",
@@ -96,7 +105,7 @@ const Home = () => {
                         : ""
                     ))
                     }
-                    {lodingState ? <div>loding ...</div> : ""}
+                    {lodingState ? !reqState[categoroyIndex] ? <div className='loading'>加载中 ...</div> : <div className='loading'>已经加载完了 ...</div> : ""}
                   </div>
               }
             ))}
@@ -108,8 +117,3 @@ const Home = () => {
   );
 };
 export default connect()(Home);
-// {products?.map((prod, index) => (
-//   cc.type === prod.category ?
-//     <MenuItem key={index} itemData={prod} /> : ""
-// ))
-// }

@@ -8,7 +8,6 @@ import { cartSelector } from "../../redux/shopping/cart"
 import { Link } from "react-router-dom"
 const Shop = () => {
   const { total, cart, cartAmount } = useSelector(cartSelector)
-  console.log(cart)
   return (
     <div className="shop-box">
       <div className="shop-back">

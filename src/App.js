@@ -9,11 +9,23 @@ import Detail from './page/details';
 import Login from './page/login';
 import Register from './page/register';
 import ConfirmPay from './page/confirmPay';
+import Address from './page/address';
 // 这个Provider基本上与共享状态的上文方式相同，用这个Provider 包装 <App />
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
+import { useEffect, useRef } from 'react';
+import { getCart } from "./redux/shopping/cart"
 // import { Redirect } from 'react-router-dom'
 const App = (currentItem) => {
-
+  const dispatch = useDispatch()
+  const renderRef = useRef(true); // 防止useEffect执行两次
+  useEffect(() => {
+    if (renderRef.current) {
+      // 防止useEffect执行两次
+      renderRef.current = false
+      return
+    }
+    dispatch(getCart())
+  }, [])
   return (
     <Router>
       <Routes>
@@ -24,6 +36,7 @@ const App = (currentItem) => {
         <Route path='/login' element={<Login />}></Route>
         <Route path='/register' element={<Register />}></Route>
         <Route path='/confirmPay' element={<ConfirmPay />}></Route>
+        <Route path='/addressList' element={<Address />}></Route>
         {/* 怎么重新定位到默认页面,Redirect 用不了 */}
         {!currentItem ? (
           <Navigate replace to="/" />

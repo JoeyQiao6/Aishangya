@@ -33,7 +33,7 @@ const Profile = () => {
             <p>历史购买记录</p></div>
           <img src={morethen} alt=""></img>
         </div>
-        <div> <div>
+        <div> <div onClick={() => { window.location.href = "/#/addressList" }}>
           <img src={address} alt=""></img>
           <p>地址管理</p></div>
           <img src={morethen} alt=""></img>

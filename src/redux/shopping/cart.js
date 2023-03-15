@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-// import instance from '../../service/request';
-// import store from "../store"
-// const { products } = useSelector(commoditySelector)
+import instance from '../../service/request';
 
 //初始状态
 const initialState = {
@@ -39,53 +37,14 @@ const cartSlice = createSlice({
     //payload是调用ADD_CART时传来的参数，所以这个里面是可以有好几个参数 或者是对象。
     ADD_CART: {
       reducer(state, { payload }) {
-        if (payload.product) {
-          const key = "PID" + payload.product.pid
-          console.log(key)
-          let cart = {}
-          if (state.cart[key] && payload.count > 0) {
-            state.cart[key]["count"] = payload.count
-            state.cart[key]["total"] = state.cart[key]["count"] * state.cart[key]["price"]
-            cart = {
-              id: state.cart[key]["id"],
-              pid: state.cart[key]["pid"],
-              count: state.cart[key]["count"],
-            }
-          } else {
-            state.cart[key] = {
-              "pid": payload.product.id,
-              "pident": "",
-              "image": payload.product.image,
-              "title": payload.product.title,
-              "price": payload.product.price,
-              "count": payload.count,
-              "total": payload.product.price * payload.count,
-              "category": payload.product.category
-            }
-            cart = {
-              pid: payload.product.id,
-              count: 1,
-            }
-            console.log(cart)
-          }
-          // 这个是存数据的请求
-          // if (payload.type !== "init") {
-          // instance.post('/apis/youshan-m/cart/updateCart', cart).then((val) => {
-          //   if (val.data.success) {
-          //     if (state.cart[key]["id"]) {
-          //       state.cart[key]["id"] = val.data.results.id
-          //     }
-          //   }
-          // })
-          // }
-        }
+        state.cart[payload.key] = payload.cart
       },
-      //对下面传过来的参数做一个封装
-      prepare(product, count) {
+      // 封装参数，是固定写法
+      prepare(cart, key) {
         return {
           payload: {
-            product: product,
-            count: count,
+            cart: cart,
+            key: key
           }
         }
       }
@@ -149,6 +108,7 @@ export const cartSelector = (state) => state.cart;
 
 export const addToCart = (product, count) => {
   return async (dispatch) => {
+    console.log("addToCart")
     //想要调用上面声明的方法ADD_CART 就必须用dispatch
     dispatch(ADD_CART(product, count))
     // 接0.1
@@ -156,15 +116,69 @@ export const addToCart = (product, count) => {
   };
 }
 
-export const removeFromCart = (id) => {
+export const removeFromCart = (cart) => {
   return async (dispatch) => {
-    dispatch(REMOVE_CART(id))
-    dispatch(RESET_TOTAL_AMOUNT())
+    console.log(cart)
+    instance.post('/apis/youshan-m/cart/delCart', { id: cart.id }).then((val) => {
+      if (val.data.success) {
+        dispatch(REMOVE_CART(cart.pid))
+        dispatch(RESET_TOTAL_AMOUNT())
+      }
+    })
   };
 };
-export const adjustQty = (product, count) => {
+export const adjustQty = (product, count, cartOb) => {
   return async (dispatch) => {
-    dispatch(ADD_CART(product, count))
-    dispatch(RESET_TOTAL_AMOUNT())
+    if (product) {
+      const key = "PID" + product.pid
+      let cart = {}
+      if (cartOb[key]) {
+        // if (count <= 0) {
+        //   return removeFromCart(cartOb[key])
+        // }
+        cart = {
+          id: cartOb[key]["id"],
+          pid: cartOb[key]["pid"],
+          count,
+        }
+      } else {
+        cart = {
+          pid: product.pid,
+          count,
+        }
+      }
+      // 这个是存数据的请求
+      instance.post('/apis/youshan-m/cart/updateCart', cart).then((val) => {
+        if (val.data.success) {
+          let cartR = {
+            "id": val.data.results.id,
+            "pid": product.pid,
+            "pident": "",
+            "image": product.image,
+            "title": product.title,
+            "price": product.price,
+            "count": count,
+            "total": product.price * count,
+            "category": product.category
+          }
+          dispatch(ADD_CART(cartR, key))
+          dispatch(RESET_TOTAL_AMOUNT())
+        }
+      })
+    }
+  };
+};
+export const getCart = () => {
+  return async (dispatch) => {
+    instance.post('/apis/youshan-m/cart/getCart').then((val) => {
+      console.log(val)
+      if (val.data.success) {
+        val = val.data.results
+        val.forEach(element => {
+          dispatch(ADD_CART(element, "PID" + element.pid))
+        });
+        dispatch(RESET_TOTAL_AMOUNT())
+      }
+    })
   };
 };
