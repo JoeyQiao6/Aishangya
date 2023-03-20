@@ -30,22 +30,29 @@ const Profile = () => {
         <div>
           <div>
             <img src={hisShopping} alt=""></img>
-            <p>历史购买记录</p></div>
+            <p>历史购买记录</p>
+          </div>
           <img src={morethen} alt=""></img>
         </div>
-        <div> <div onClick={() => { window.location.href = "/#/addressList" }}>
-          <img src={address} alt=""></img>
-          <p>地址管理</p></div>
+        <div onClick={() => { window.location.href = "/#/addressList" }}>
+          <div >
+            <img src={address} alt=""></img>
+            <p>地址管理</p>
+          </div>
           <img src={morethen} alt=""></img>
         </div>
-        <div> <div>
-          <img src={help} alt=""></img>
-          <p>帮助中心</p></div>
+        <div>
+          <div>
+            <img src={help} alt=""></img>
+            <p>帮助中心</p>
+          </div>
           <img src={morethen} alt=""></img>
         </div>
-        <div> <div onClick={() => { logoutfunc() }}>
-          <img src={logout} alt=""></img>
-          <p>登出</p></div>
+        <div onClick={() => { logoutfunc() }}>
+          <div >
+            <img src={logout} alt=""></img>
+            <p>登出</p>
+          </div>
           <img src={morethen} alt=""></img>
         </div>
       </div>

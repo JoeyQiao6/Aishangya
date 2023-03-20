@@ -1,21 +1,23 @@
 import React from 'react';
 import './index.less';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import morethen from '../../../assets/imgs/profile/morethen.png';
-const Item = ({ itemData }) => {
-  const dispatch = useDispatch()
-
+const Item = (data) => {
   return (
-    <div className="address-list-box">
-      <div className="address-des">
-        <div className="address-title">
-          <p>{itemData.title}</p>
+    Object.keys(data.itemData).map((key, index) => (
+      <div className="address-list-box" key={index} onClick={() => data.selectItem(data.itemData[key])}>
+        <div className="address-des">
+          <div className="address-title">
+            <p>{data.itemData[key].receive}</p>
+          </div>
+          <p></p>
+          <p>{data.itemData[key].postcode} {data.itemData[key].prefecture} {data.itemData[key].city} {data.itemData[key].town} {data.itemData[key].address}</p>
+          <p> {data.itemData[key].roomnumber} {data.itemData[key].building}</p>
         </div>
-        <p></p>
-        <p>{itemData.desc}</p>
+        <img src={morethen} alt="" />
       </div>
-      <img src={morethen} />
-    </div>
+    ))
+
   );
 }
 const mapDispatchToProps = (dispatch) => {
