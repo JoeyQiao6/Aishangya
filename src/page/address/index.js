@@ -46,8 +46,8 @@ const Address = () => {
     <div className="address-box" >
 
       {changePage ? <>
-        <div className="address-back" >
-          <a href="/#/profile"><img src={backW} alt="" ></img></a>
+        <div className="address-back" onClick={() => { window.history.back() }}>
+          <img src={backW} alt="" ></img>
 
           <p>选择收获地址</p>
         </div>
