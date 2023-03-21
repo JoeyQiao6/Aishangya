@@ -19,22 +19,6 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    //添加商品 ADD_CART
-    // ADD_CART 接收三个参数，分别是商品信息、商品数量和操作类型。它会将商品信息添加到购物车中，如果已经存在相同的商品，则更新商品数量。最后它会根据操作类型计算运费。
-
-    // 在 payload 中，包含了要加入购物车的商品 product、商品数量 count 和一个用于标识 action 类型的 type。
-
-    // 该 reducer 的主要功能是将商品添加到购物车中。如果 state 中已经存在这个商品，则只需更新商品的数量和总价，否则需要创建一个新的购物车条目。在这两种情况下，该 reducer 都会更新 state 中的 cart 属性。此外，如果 payload 中的 type 不是 "init"，则还会将 cart 发送到服务器以更新购物车。
-
-    // 具体而言，该 reducer 的主要执行过程如下：
-
-    // 通过 payload.product.id 构造购物车中商品的 key（key 以 "PID" 为前缀）。
-    // 检查当前购物车中是否已经存在该商品。如果是，则更新购物车中该商品的数量和总价；如果不是，则创建一个新的购物车条目。
-    // 如果 payload.type 不是 "init"，则发送购物车数据到服务器进行更新。
-    // 最后，更新 state 中的 cart 属性。
-    // 注意，这段代码中有一些被注释掉的部分，这些代码可能与将购物车发送到服务器相关。 
-
-    //payload是调用ADD_CART时传来的参数，所以这个里面是可以有好几个参数 或者是对象。
     ADD_CART: {
       reducer(state, { payload }) {
         state.cart[payload.key] = payload.cart

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import './index.less';
 import instance from '../../service/request';
-const CodeImage = ({ code, width = 200, height = 100 }) => {
+const CodeImage = ({ code, width = 80, height = 40 }) => {
   const canvasRef = useRef(null);
   useEffect(() => {
     if (code === "") {
@@ -15,8 +15,8 @@ const CodeImage = ({ code, width = 200, height = 100 }) => {
     ctx.clearRect(0, 0, width, height);
 
     // Set the font and text color
-    ctx.font = '48px serif';
-    ctx.fillStyle = 'black';
+    ctx.font = '1.0667rem serif';
+    ctx.fillStyle = 'White';
 
     // Draw the code on the canvas
     const x = width / 4;

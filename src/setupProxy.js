@@ -8,7 +8,7 @@ const localCommonUrl = "http://192.168.100.137:8830/"
 module.exports = function (app) {
   app.use(
     createProxyMiddleware("/apis", {
-      target: localUrl,
+      target: url,
       changeOrigin: true,
       pathRewrite: {
         '^/apis/': '/'
@@ -17,7 +17,7 @@ module.exports = function (app) {
   );
   app.use(
     createProxyMiddleware("/commons", {
-      target: localCommonUrl,
+      target: urlCommon,
       changeOrigin: true,
       pathRewrite: {
         '^/commons/': '/'
