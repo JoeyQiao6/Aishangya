@@ -13,6 +13,8 @@ const CartItem = ({ itemData }) => {
       <div className="shop-des">
         <div className="shop-name-remove"> <p>{itemData.title}</p>
           <div onClick={() => dispatch(removeFromCart(itemData))}>
+
+            
             <p >移除</p></div>
         </div>
         <p></p>

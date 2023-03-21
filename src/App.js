@@ -10,6 +10,7 @@ import Login from './page/login';
 import Register from './page/register';
 import ConfirmPay from './page/confirmPay';
 import Address from './page/address';
+import AddressAll from './page/addressAll/index';
 // 这个Provider基本上与共享状态的上文方式相同，用这个Provider 包装 <App />
 import { connect, useDispatch } from "react-redux";
 import { useEffect, useRef } from 'react';
@@ -37,6 +38,7 @@ const App = (currentItem) => {
         <Route path='/register' element={<Register />}></Route>
         <Route path='/confirmPay' element={<ConfirmPay />}></Route>
         <Route path='/addressList' element={<Address />}></Route>
+        <Route path='/addressAll' element={<AddressAll />}></Route>
         {/* 怎么重新定位到默认页面,Redirect 用不了 */}
         {!currentItem ? (
           <Navigate replace to="/" />

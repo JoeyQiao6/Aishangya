@@ -4,3 +4,10 @@ body {
 #id {
   overflow: hidden;
 }
+
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
