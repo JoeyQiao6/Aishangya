@@ -12,6 +12,8 @@ const initialState = {
   cartAmount: 0,
   fare: {}, //运费计算结果
   freeShippingCategory: [], //享受包邮的商品种类
+  address: {},
+  payment: []
 }
 //cartSlice 是一个 reducer，定义了一系列操作 state 的函数
 // 包括添加商品到购物车、更新商品、移除购物车的商品、重置购物车状态
@@ -97,18 +99,23 @@ const cartSlice = createSlice({
           state.total += cartOb[key]["count"] * cartOb[key]["price"]
         }
       }
+    },
+    SET_ADDRESS: (state, { payload }) => {
+      state.address = payload
+    },
+    SET_PAYMENT: (state, { payload }) => {
+      state.payment = payload
     }
   },
 })
 
 export default cartSlice.reducer
 //cartSlice.actions 声明式引入，这样的话 ADD_CART, RESET_TOTAL_AMOUNT这些都可以在外面用，相当于有个参数
-export const { ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART } = cartSlice.actions
+export const { ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_PAYMENT } = cartSlice.actions
 export const cartSelector = (state) => state.cart;
 
 export const addToCart = (product, count) => {
   return async (dispatch) => {
-    console.log("addToCart")
     //想要调用上面声明的方法ADD_CART 就必须用dispatch
     dispatch(ADD_CART(product, count))
     // 接0.1
@@ -118,7 +125,6 @@ export const addToCart = (product, count) => {
 
 export const removeFromCart = (cart) => {
   return async (dispatch) => {
-    console.log(cart)
     instance.post('/apis/youshan-m/cart/delCart', { id: cart.id }).then((val) => {
       if (val.data.success) {
         dispatch(REMOVE_CART(cart.pid))
@@ -133,9 +139,6 @@ export const adjustQty = (product, count, cartOb) => {
       const key = "PID" + product.pid
       let cart = {}
       if (cartOb[key]) {
-        // if (count <= 0) {
-        //   return removeFromCart(cartOb[key])
-        // }
         cart = {
           id: cartOb[key]["id"],
           pid: cartOb[key]["pid"],
@@ -171,13 +174,34 @@ export const adjustQty = (product, count, cartOb) => {
 export const getCart = () => {
   return async (dispatch) => {
     instance.post('/apis/youshan-m/cart/getCart').then((val) => {
-      console.log(val)
       if (val.data.success) {
         val = val.data.results
         val.forEach(element => {
           dispatch(ADD_CART(element, "PID" + element.pid))
         });
         dispatch(RESET_TOTAL_AMOUNT())
+      }
+    })
+  };
+};
+export const getAddress = () => {
+  return async (dispatch) => {
+    instance.post('/apis/youshan-m/merchantaddress/queryByUname').then((val) => {
+      if (val.data.success) {
+        dispatch(SET_ADDRESS(val.data.results));
+      } else {
+        dispatch(SET_ADDRESS([]));
+      }
+    })
+  };
+};
+export const getPayment = () => {
+  return async (dispatch) => {
+    instance.post('/apis/youshan-m/payment/getAllPayment').then((val) => {
+      if (val.data.success) {
+        dispatch(SET_PAYMENT(val.data.results));
+      } else {
+        dispatch(SET_PAYMENT([]));
       }
     })
   };
