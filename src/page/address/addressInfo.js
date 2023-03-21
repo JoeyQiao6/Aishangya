@@ -142,6 +142,7 @@ const AddressInfo = (addPara) => {
         console.log(val)
         alert("保存成功")
         addPara.setChangePage(true)
+        window.history.back()
       })
     }
   }

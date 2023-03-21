@@ -29,6 +29,7 @@
       padding: .8533rem .4267rem;
       border-radius: .4267rem;
       margin-bottom: .8533rem;
+      min-height: 6vh !important;
 
       .address-left {
         display: flex;
@@ -172,6 +173,11 @@
 
     }
 
+    .product-list {
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
     .price-list {
       background-color: #381319;
       padding: .8533rem .4267rem;
@@ -290,6 +296,21 @@
       font-size: .8533rem;
       color: #fff;
       text-decoration: none;
+    }
+  }
+
+  .select-op {
+    max-height: 20vh;
+    position: fixed;
+    flex-direction: column;
+    bottom: 0;
+    background-color: #381319;
+    width: -webkit-fill-available;
+    text-align: center;
+    overflow-y: auto;
+
+    div {
+      height: 6vh;
     }
   }
 }
