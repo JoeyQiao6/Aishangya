@@ -327,6 +327,9 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
+        // '@mui/styled-engine': '@mui/styled-engine-sc',
+        // '@mui/material': '@mui/material/esm',
+        // '@mui/icons-material': '@mui/icons-material/esm'
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).

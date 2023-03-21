@@ -52,12 +52,8 @@ const Profile = () => {
           </div>
           <img src={morethen} alt=""></img>
         </div>
-        <div>
-          <div
-            onClick={() => {
-              logoutfunc();
-            }}
-          >
+        <div onClick={() => { logoutfunc() }}>
+          <div >
             <img src={logout} alt=""></img>
             <p>登出</p>
           </div>
