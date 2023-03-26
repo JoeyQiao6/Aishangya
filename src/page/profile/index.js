@@ -27,10 +27,12 @@ const Profile = () => {
       </div>
       <Personal />
       <div className="profile-list">
-        <div>
+        <div onClick={() => {
+            negative("/orderCard");
+          }}>
           <div>
             <img src={hisShopping} alt=""></img>
-            <p>历史购买记录</p>
+            <p>订单管理</p>
           </div>
           <img src={morethen} alt=""></img>
         </div>
@@ -52,8 +54,12 @@ const Profile = () => {
           </div>
           <img src={morethen} alt=""></img>
         </div>
-        <div onClick={() => { logoutfunc() }}>
-          <div >
+        <div
+          onClick={() => {
+            logoutfunc();
+          }}
+        >
+          <div>
             <img src={logout} alt=""></img>
             <p>登出</p>
           </div>

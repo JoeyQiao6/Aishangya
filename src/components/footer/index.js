@@ -26,7 +26,7 @@ const Footer = () => {
         <span>{cartAmount}</span>
       </div>
       <div>
-        <NavLink to="/mall" className="fontcolor">
+        <NavLink to="/like" className="fontcolor">
           <i className='iconfont icon-mall'></i>
           <p>我的收藏</p></NavLink>
       </div>

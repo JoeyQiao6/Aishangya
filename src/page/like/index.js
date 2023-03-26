@@ -2,7 +2,7 @@ import './index.less';
 import React from 'react';
 import Footer from '../../components/footer';
 
-const Mall = () =>{
+const Like = () =>{
   return (
     <div className="home">
      hello
@@ -11,4 +11,4 @@ const Mall = () =>{
     </div>
   );
 }
-export default Mall;
+export default Like;
