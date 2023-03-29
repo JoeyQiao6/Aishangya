@@ -11,7 +11,7 @@ const Shop = () => {
   return (
     <div className="shop-box">
       <div className="shop-back">
-        <img src={backW} alt=""></img>
+        <img src={backW} alt="" onClick={() => { window.history.back() }}></img>
         <p>购物车</p>
       </div>
       {Object.keys(cart).map((key, index) => (
