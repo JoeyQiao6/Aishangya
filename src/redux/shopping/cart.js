@@ -5,15 +5,23 @@ import instance from '../../service/request';
 const initialState = {
   cart: {}// 商品列表
   ,//{id,title, descr,price,img,qty}
-  freight: 0,//运费
+  yf: 0,//运费
+  kf: "",// 
+  svf: 0, // 货到付款费用
   total: 0,
-  fareLimit: 3500, //满额包邮的条件
-  fareLimit2: 5000,
+  fareCODOb: {}, //货到付款 费用
+  fareKFOb: {}, //保鲜 费用
+  fareLimitADDRESSOb: {}, // 低于运费限额
   cartAmount: 0,
-  fare: {}, //运费计算结果
+  fareOb: {}, //运费计算结果
   freeShippingCategory: [], //享受包邮的商品种类
   address: {},
-  payment: []
+  addrSelect: {},//选中的地址
+  payment: [],
+  paymentSelect: {},//选中的支付方式
+  rate: 0,
+  takeTimeType: [],
+  takeTime: "0"
 }
 //cartSlice 是一个 reducer，定义了一系列操作 state 的函数
 // 包括添加商品到购物车、更新商品、移除购物车的商品、重置购物车状态
@@ -21,6 +29,45 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    SET_TAKETIME(state, { payload }) {
+      state.takeTime = payload
+    },
+    SET_TAKETIMETYPE(state, { payload }) {
+      state.takeTimeType = payload
+    },
+    SET_RATE(state, { payload }) {
+      state.rate = payload
+    },
+    RESET_FARE(state, { payload }) {
+      switch (payload) {
+        case "payment":
+          if (state.paymentSelect.title === "货到付款") {
+            for (let key in state.fareCODOb) {
+              if (key !== "无限" && state.total <= Number(key)) {
+                state.svf = state.fareCODOb[key].fare
+                break;
+              } else if (key === "无限") {
+                state.svf = state.fareCODOb[key].fare
+                break;
+              }
+            }
+          } else {
+            state.svf = 0
+          }
+          break;
+        case "address":
+          if (state.addrSelect && state.addrSelect.prefecture) {
+            if (state.total < Number(state.fareLimitADDRESSOb[state.addrSelect.prefecture].display)) {
+              state.yf = state.fareLimitADDRESSOb[state.addrSelect.prefecture].fare
+            } else {
+              state.yf = 0
+            }
+          }
+          break;
+        default:
+          break;
+      }
+    },
     //添加商品 ADD_CART
     // ADD_CART 接收三个参数，分别是商品信息、商品数量和操作类型。它会将商品信息添加到购物车中，如果已经存在相同的商品，则更新商品数量。最后它会根据操作类型计算运费。
 
@@ -56,7 +103,6 @@ const cartSlice = createSlice({
     UPDATE_COUNT_CART: {
       //reducer是主要要执行的方法
       reducer(state, { payload }) {
-        console.log(payload)
         const key = "PID" + payload.id
         state.cart[key]["count"] = payload.count
         state.cart[key]["total"] = state.cart[key]["count"] * state.cart[key]["price"]
@@ -85,6 +131,9 @@ const cartSlice = createSlice({
         }
       }
     },
+    CLEAR_CART(state) {
+      state.cart = {}
+    },
     //重置购物车状态 RESET_TOTAL_AMOUNT
     // RESET_TOTAL_AMOUNT 不接收参数，它会重置购物车状态，包括清空购物车中的商品、商品数量和总价。然后它会重新计算购物车中所有商品的数量和总价。
     RESET_TOTAL_AMOUNT: (state, { payload }) => {
@@ -102,18 +151,55 @@ const cartSlice = createSlice({
     },
     SET_ADDRESS: (state, { payload }) => {
       state.address = payload
+      payload.forEach((element) => {
+        if (element.state === 1) {
+          state.addrSelect = element
+        }
+      });
     },
     SET_PAYMENT: (state, { payload }) => {
       state.payment = payload
-    }
+    },
+    SET_KF: (state, { payload }) => {
+      state.kf = payload
+    },
+    SET_PAYMENTSELECT: (state, { payload }) => {
+      state.paymentSelect = payload
+    },
+    SET_FAREOB: (state, { payload }) => {
+      state.fareOb = payload
+      payload[0].map((ele) => {
+        return state.fareCODOb[ele.title.split("_")[1] || "无限"] = ele
+      })
+      payload[2].map((ele) => {
+        return state.fareKFOb[ele.title] = ele
+      })
+      state.kf = payload[2][0].title
+      payload[3].map((ele) => {
+        return state.fareLimitADDRESSOb[ele.title] = ele
+      })
+      payload[4].map((ele) => {
+        return state.fareLimitADDRESSOb[ele.title] = ele
+      })
+      payload[5].map((ele) => {
+        return state.fareLimitADDRESSOb[ele.title] = ele
+      })
+    },
   },
 })
 
 export default cartSlice.reducer
 //cartSlice.actions 声明式引入，这样的话 ADD_CART, RESET_TOTAL_AMOUNT这些都可以在外面用，相当于有个参数
-export const { ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_PAYMENT } = cartSlice.actions
+export const { CLEAR_CART, SET_TAKETIME, SET_TAKETIMETYPE, SET_RATE, SET_KF, ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_PAYMENT, SET_PAYMENTSELECT, SET_FAREOB, RESET_FARE } = cartSlice.actions
 export const cartSelector = (state) => state.cart;
-
+export const clearCart = () => {
+  return async (dispatch) => {
+    //想要调用上面声明的方法ADD_CART 就必须用dispatch
+    dispatch(CLEAR_CART())
+    // 接0.1
+    dispatch(RESET_TOTAL_AMOUNT())
+  };
+}
 export const addToCart = (product, count) => {
   return async (dispatch) => {
     //想要调用上面声明的方法ADD_CART 就必须用dispatch
@@ -199,9 +285,69 @@ export const getPayment = () => {
   return async (dispatch) => {
     instance.post('/apis/youshan-m/payment/getAllPayment').then((val) => {
       if (val.data.success) {
-        dispatch(SET_PAYMENT(val.data.results));
+        const re = val.data.results
+        dispatch(SET_PAYMENT(re));
+        dispatch(SET_PAYMENTSELECT(re[0]));
       } else {
         dispatch(SET_PAYMENT([]));
+      }
+    })
+  };
+};
+export const setPaymentSelect = (ob) => {
+  return async (dispatch) => {
+    dispatch(SET_PAYMENTSELECT(ob));
+  };
+};
+export const setTakeTime = (ob) => {
+  return async (dispatch) => {
+    dispatch(SET_TAKETIME(ob));
+  };
+};
+export const getFare = () => {
+  return async (dispatch) => {
+    instance.post('/apis/youshan-m/fare/getAllFare').then((val) => {
+      if (val.data.success) {
+        const re = val.data.results
+        const rs = re.reduce((acc, ele) => {
+          acc[ele.type] = acc[ele.type] || []
+          acc[ele.type].push(ele)
+          return acc
+        }, {})
+        dispatch(SET_FAREOB(rs));
+      } else {
+        dispatch(SET_FAREOB({}));
+      }
+    })
+  };
+};
+
+export const resetFare = (type) => {
+  return async (dispatch) => {
+    dispatch(RESET_FARE(type));
+  };
+};
+export const setKF = (val) => {
+  return async (dispatch) => {
+    dispatch(SET_KF(val));
+  };
+};
+export const getRate = () => {
+  return async (dispatch) => {
+    instance.post('/apis/common/rate/getJPCNY').then((val) => {
+      if (val.status === 200) {
+        dispatch(SET_RATE(val.data));
+      } else {
+        dispatch(SET_RATE(0));
+      }
+    })
+  };
+};
+export const getTakeTimeType = () => {
+  return async (dispatch) => {
+    instance.post('/apis/common/dictionary/queryByGroupIds', ["take_time_type_merchant"]).then((val) => {
+      if (val.status === 200) {
+        dispatch(SET_TAKETIMETYPE(val.data.take_time_type_merchant))
       }
     })
   };
