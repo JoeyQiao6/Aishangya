@@ -6,7 +6,8 @@ import instance from '../../service/request';
 //初始状态
 const initialState = {
   commodityCategory: [], // 商品分类
-  categoryList: []
+  categoryList: [],
+  orderState: []
 }
 const dictionarySlice = createSlice({
   name: 'dictionary',
@@ -19,11 +20,14 @@ const dictionarySlice = createSlice({
         state.categoryList.push(item.type);
       });
     },
+    SET_ORDERSTATE(state, { payload }) {
+      state.orderState = payload
+    },
   },
 })
 
 export default dictionarySlice.reducer
-export const { SETCOMMODITYCATEGORY } = dictionarySlice.actions
+export const { SETCOMMODITYCATEGORY, SET_ORDERSTATE } = dictionarySlice.actions
 export const dictionarySelector = (state) => state.dictionary;
 
 export const homeSectionCategoryInit = () => {
@@ -33,6 +37,20 @@ export const homeSectionCategoryInit = () => {
         val = val.data.data
         console.log(val)
         dispatch(SETCOMMODITYCATEGORY(val))
+      }
+    })
+  };
+}
+export const getOrderState = () => {
+  return async (dispatch) => {
+    instance.post("/apis/common/dictionary/queryByGroupIds", ["order_status"]).then((val) => {
+      if (val.status === 200) {
+        val = val.data.order_status
+        let res = val.reduce((acc, curr) => {
+          acc[curr.value] = curr.display;
+          return acc;
+        }, {});
+        dispatch(SET_ORDERSTATE(res))
       }
     })
   };

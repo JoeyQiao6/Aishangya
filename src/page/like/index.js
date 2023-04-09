@@ -1,12 +1,21 @@
 import './index.less';
 import React from 'react';
 import Footer from '../../components/footer';
-
-const Like = () =>{
+import {
+  Layout,
+  Typography,
+} from "antd";
+import backW from '../../assets/imgs/details/back-w.svg'
+const { Header, Content } = Layout;
+const { Title } = Typography;
+const Like = () => {
   return (
-    <div className="home">
-     hello
-     <Footer />
+    <div className="like">
+      <Header >
+        <img src={backW} alt="" onClick={() => { window.history.back() }}></img>
+        <Title>我的收藏</Title>
+      </Header>
+      <Footer />
 
     </div>
   );

@@ -3,8 +3,8 @@ import instance from '../../service/request';
 
 //初始状态
 const initialState = {
-  cart: {}// 商品列表
-  ,//{id,title, descr,price,img,qty}
+  cart: {},// 商品列表 {id,title, descr,price,img,qty}
+  cartProducts: [],
   yf: 0,//运费
   kf: "",// 
   svf: 0, // 货到付款费用
@@ -21,7 +21,8 @@ const initialState = {
   paymentSelect: {},//选中的支付方式
   rate: 0,
   takeTimeType: [],
-  takeTime: "0"
+  takeTime: "0",
+  addCartState: true
 }
 //cartSlice 是一个 reducer，定义了一系列操作 state 的函数
 // 包括添加商品到购物车、更新商品、移除购物车的商品、重置购物车状态
@@ -29,6 +30,12 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    SET_ADDCARTSTATE(state, { payload }) {
+      state.addCartState = payload
+    },
+    SET_CARTPRODUCTS(state, { payload }) {
+      state.cartProducts = payload
+    },
     SET_TAKETIME(state, { payload }) {
       state.takeTime = payload
     },
@@ -190,7 +197,7 @@ const cartSlice = createSlice({
 
 export default cartSlice.reducer
 //cartSlice.actions 声明式引入，这样的话 ADD_CART, RESET_TOTAL_AMOUNT这些都可以在外面用，相当于有个参数
-export const { CLEAR_CART, SET_TAKETIME, SET_TAKETIMETYPE, SET_RATE, SET_KF, ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_PAYMENT, SET_PAYMENTSELECT, SET_FAREOB, RESET_FARE } = cartSlice.actions
+export const { SET_ADDCARTSTATE, SET_CARTPRODUCTS, CLEAR_CART, SET_TAKETIME, SET_TAKETIMETYPE, SET_RATE, SET_KF, ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_PAYMENT, SET_PAYMENTSELECT, SET_FAREOB, RESET_FARE } = cartSlice.actions
 export const cartSelector = (state) => state.cart;
 export const clearCart = () => {
   return async (dispatch) => {
@@ -211,7 +218,8 @@ export const addToCart = (product, count) => {
 
 export const removeFromCart = (cart) => {
   return async (dispatch) => {
-    instance.post('/apis/youshan-m/cart/delCart', { id: cart.id }).then((val) => {
+    console.log(cart);
+    instance.post('/apis/youshan-m/cart/delCart', { pid: cart.pid }).then((val) => {
       if (val.data.success) {
         dispatch(REMOVE_CART(cart.pid))
         dispatch(RESET_TOTAL_AMOUNT())
@@ -222,6 +230,7 @@ export const removeFromCart = (cart) => {
 export const adjustQty = (product, count, cartOb) => {
   return async (dispatch) => {
     if (product) {
+      dispatch(SET_ADDCARTSTATE(false))
       const key = "PID" + product.pid
       let cart = {}
       if (cartOb[key]) {
@@ -238,6 +247,7 @@ export const adjustQty = (product, count, cartOb) => {
       }
       // 这个是存数据的请求
       instance.post('/apis/youshan-m/cart/updateCart', cart).then((val) => {
+        dispatch(SET_ADDCARTSTATE(true))
         if (val.data.success) {
           let cartR = {
             "id": val.data.results.id,
@@ -266,6 +276,13 @@ export const getCart = () => {
           dispatch(ADD_CART(element, "PID" + element.pid))
         });
         dispatch(RESET_TOTAL_AMOUNT())
+        const pidlist = val.map(item => item.pid);
+        instance.post('/apis/youshan-m/merchantcommodity/getListByIds', pidlist).then((val) => {
+          if (val.data.success) {
+            val = val.data.results
+            dispatch(SET_CARTPRODUCTS(val))
+          }
+        })
       }
     })
   };

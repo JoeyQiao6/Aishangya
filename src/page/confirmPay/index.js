@@ -6,8 +6,7 @@ import morethen from '../../assets/imgs/profile/morethen.png';
 import pay from '../../assets/imgs/confirmPay/pay.png';
 // import choose from '../../assets/imgs/confirmPay/choose.png';
 import { useSelector, useDispatch } from "react-redux";
-import { clearCart, setTakeTime, getTakeTimeType, getRate, getAddress, getPayment, setPaymentSelect, getFare, resetFare, setKF } from "../../redux/shopping/cart"
-import { cartSelector } from "../../redux/shopping/cart"
+import { cartSelector, clearCart, setTakeTime, getTakeTimeType, getRate, getAddress, getPayment, setPaymentSelect, getFare, resetFare, setKF } from "../../redux/shopping/cart"
 import CartItem from '../shop/cartItem';
 import { Drawer, Radio, message } from 'antd';
 import instance from "../../service/request"
@@ -116,7 +115,8 @@ const ConfirmPay = () => {
           });
           order.data = JSON.stringify(res);
           instance.post('/apis/youshan-m/merchantorder/createOrder', order).then((val) => {
-            if (val.status === 200) {
+            console.log(val);
+            if (val.data.success) {
               dispatch(clearCart())
               messageApi.open({
                 type: 'success',
@@ -125,7 +125,7 @@ const ConfirmPay = () => {
             } else {
               messageApi.open({
                 type: 'error',
-                content: '下单失败，请联系客服人员',
+                content: val.data.results,
               });
             }
           })
