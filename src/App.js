@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import "./common.sass";
-import Home from "./page/home";
+import Home from "./page/home/index";
 import Profile from "./page/profile";
 import Shop from "./page/shop";
 import Like from "./page/like";
@@ -15,6 +15,7 @@ import Login from "./page/login";
 import Register from "./page/register";
 import ConfirmPay from "./page/confirmPay";
 import OrderCard from "./page/orderCard";
+import OneMore from "./page/orderCard/oneMore";
 import OrderDetail from "./page/orderDetail";
 import Payment from "./page/payment"
 import WhatIsTradeId from "./page/payment/what"
@@ -47,9 +48,10 @@ const App = (currentItem) => {
         <Route path="/confirmPay" element={<ConfirmPay />}></Route>
         <Route path="/addressAll" element={<AddressAll />}></Route>
         <Route path="/orderCard" element={<OrderCard />}></Route>
-        <Route path="/orderDetail" element={<OrderDetail />}></Route>
+        <Route path="/orderDetail/:id" element={<OrderDetail />}></Route>
         <Route exact path="/payment/:id" element={<Payment />}></Route>
         <Route exact path="/details/:id" element={<Detail />}></Route>
+        <Route exact path="/onemore/:id" element={<OneMore />}></Route>
         <Route exact path="/whatistradeid" element={<WhatIsTradeId />}></Route>
       </Routes>
     </Router>

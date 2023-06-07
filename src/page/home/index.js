@@ -3,42 +3,51 @@ import React, { useEffect, useRef, useState } from 'react';
 import Footer from '../../components/footer';
 import Personal from '../../components/personal';
 import Search from '../../components/search';
-import { Tabs } from 'antd';
 import MenuItem from './menuItem';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { homeSectionCategoryInit, dictionarySelector } from '../../redux/common/dictionary'
 import { commodityHomeAsync, commoditySelector } from '../../redux/commodity/commodity'
-
+import { Tabs, Swiper, DotLoading } from 'antd-mobile'
+import { DemoBlock } from './utils.js'
+import InfiniteScroll from 'react-infinite-scroll-component';
+const InfiniteScrollContent = (hasMore) => {
+  return (
+    <>
+      {hasMore.hasMore ? (
+        <>
+          <span>Loading</span>
+          <DotLoading />
+        </>
+      ) : (
+        <span>--- 我是有底线的 ---</span>
+      )}
+    </>
+  )
+}
 const Home = () => {
   const dispatch = useDispatch()
-  const { products } = useSelector(commoditySelector)
-  const { commodityCategory, categoryList } = useSelector(dictionarySelector)
+  const { products, hasMore, rows } = useSelector(commoditySelector)
   const renderRef = useRef(true); // 防止useEffect执行两次
+  const swiperRef = useRef(null)
+  const elementRef = useRef(null);
+  const { commodityCategory, categoryList } = useSelector(dictionarySelector)
   const [pages, setPages] = useState([0, 0])
-  const rows = 10
-  const [reqState, setReqState] = useState([false, false])
-  const [scrollableDivRef] = useState([useRef(null), useRef(null)]);
-  const [lodingState, setLodingState] = useState(false)
   const [categoroyIndex, setCategoryIndex] = useState(0)
-  const [categoroyChangeState, setCategoryCategoroyChangeState] = useState(true)
-  const handleScroll = () => {
-    if (lodingState) return
-    const { scrollTop, clientHeight, scrollHeight } = scrollableDivRef[categoroyIndex].current;
-
-    if (scrollHeight - scrollTop === clientHeight) {
-      // 执行你需要的操作
-      setLodingState(true)
-      setTimeout(() => {
-        getProducts()
-      }, 1000);
-    }
-  };
+  const [resState, setResState] = useState([true, true])
   useEffect(() => {
-    setLodingState(false)
-    if (products.length % rows > 0) {
-      reqState[categoroyIndex] = true
+    // const element = elementRef.current;
+    // const handleWheel = (event) => { };
+    // element.addEventListener('wheel', handleWheel, { passive: true });
+    // return () => {
+    //   element.removeEventListener('wheel', handleWheel, { passive: true });
+    // };
+  }, []);
+  useEffect(() => {
+    if (products.length > 0) {
+      let resStatebak = resState
+      resStatebak[categoroyIndex] = true
+      setResState(resStatebak)
     }
-
   }, [products.length])
   useEffect(() => {
     if (renderRef.current) {
@@ -50,68 +59,123 @@ const Home = () => {
       dispatch(homeSectionCategoryInit())
     }
     if (categoryList.length > 0 && products.length === 0) {
-      getProducts()
+      fetchMoreData()
     }
   }, [dispatch, categoryList])
-  const getProducts = () => {
-    if (reqState[categoroyIndex]) {
-      return
-    }
-    pages[categoroyIndex] += 1
+  // async function loadMore() {
+  //   const append = await mockRequest()
+  //   setData(val => [...val, ...append])
+  //   setHasMore(append.length > 0)
+  // }
+  const fetchMoreData = (pr) => {
+    let pagesbak = pages
+    console.log(pr);
+    let index = pr ? pr : categoroyIndex
+    console.log(index);
+    pagesbak[index] += 1
+    setPages(pagesbak)
     const para = {
-      page: pages[categoroyIndex],
+      page: pagesbak[index],
       // 这个是一页显示多少个数据
       rows,
       //查找时 根据名字或者分类进行查找
       condition: {
         title: "",
-        category: categoryList[categoroyIndex]
+        category: categoryList[index]
       }
     }
-    dispatch(commodityHomeAsync(para))
+    console.log(para)
+    console.log(pages)
+    dispatch(commodityHomeAsync(para, hasMore, index))
   }
-  const getChangeCategory = (index) => {
-    setCategoryIndex(index)
-  }
-  useEffect(() => {
-    if (categoroyIndex > 0 && categoroyChangeState) {
-      getProducts()
-      setCategoryCategoroyChangeState(false)
+  async function getProducts(pr) {
+    let index = pr ? pr : categoroyIndex
+    let resStatebak = resState
+    console.log("getProducts");
+    try {
+      if (!hasMore[index] || !resState[index]) {
+        return
+      }
+      resStatebak[index] = false
+      setResState(resStatebak)
+      fetchMoreData(index)
+    } finally {
+      resStatebak[index] = true
+      setResState(resStatebak)
     }
-  }, [categoroyIndex])
+  }
+
   return (
     <>
       <Personal />
       <Search />
-      <div className="home">
+      <div className="home" ref={elementRef}>
         <div className='tabs-box'>
-          <Tabs
-            onChange={getChangeCategory}
-            defaultActiveKey="1"
-            items={commodityCategory?.map((cc, index) => (
-              {
-                label: (
-                  <div>
-                    <img src={cc.image}></img>
-                    <p>{cc.title}</p>
+          <DemoBlock padding='0'>
+            <Tabs
+              activeKey={commodityCategory[categoroyIndex]?.id}
+              onChange={key => {
+                const index = commodityCategory.findIndex(item => item.id === Number(key))
+                setCategoryIndex(index)
+                swiperRef.current?.swipeTo(index)
+                const index1 = products.findIndex(item => Number(item.category) === Number(commodityCategory[index].type))
+                if (index1 < 0) {
+                  getProducts(index)
+                }
+              }}
+            >
+              {commodityCategory.map(item => (
+                <Tabs.Tab title={< div ><img src={item.image} alt=""></img> <p>{item.title}</p></div>} key={item.id} />
+              ))}
+            </Tabs>
+            <Swiper
+              direction='horizontal'
+              loop
+              indicator={() => null}
+              ref={swiperRef}
+              defaultIndex={categoroyIndex}
+              onIndexChange={index => {
+                setCategoryIndex(index)
+              }}
+            >
+              {commodityCategory?.map(item => (
+                <Swiper.Item key={item.id}>
+                  <div className='productList' >
+                    <InfiniteScroll
+                      dataLength={products.length}
+                      next={getProducts}
+                      hasMore={hasMore[categoroyIndex]}
+                      height={540}
+                      loader={<h4>Loading...</h4>}
+                      refreshFunction={getProducts}
+                      pullDownToRefresh
+                      pullDownToRefreshThreshold={10}
+                      pullDownToRefreshContent={
+                        <h3 style={{ textAlign: 'center' }}>
+                          &#8595; Pull down to refresh
+                        </h3>
+                      }
+                      releaseToRefreshContent={
+                        <h3 style={{ textAlign: 'center' }}>
+                          &#8593; Release to refresh
+                        </h3>
+                      }
+                    >
+                      {products?.map((prod, index) => (
+                        item.type === prod.category ?
+                          <MenuItem key={index} itemData={prod} />
+                          : ""
+                      ))
+                      }
+                    </InfiniteScroll>
                   </div>
-                ),
-                key: index,
-                children:
-                  <div className='productList' ref={scrollableDivRef[index]} onScroll={handleScroll}>
-                    {products?.map((prod, index) => (
-                      cc.type === prod.category ?
-                        <MenuItem key={index} itemData={prod} />
-                        : ""
-                    ))
-                    }
-                    {lodingState ? !reqState[categoroyIndex] ? <div className='loading'>加载中 ...</div> : <div className='loading'>已经加载完了 ...</div> : ""}
-                  </div>
-              }
-            ))}
-          />
-        </div>
-      </div>
+                </Swiper.Item>
+
+              ))}
+            </Swiper>
+          </DemoBlock>
+        </div >
+      </div >
       <Footer />
     </>
   );

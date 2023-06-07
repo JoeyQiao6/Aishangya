@@ -4,7 +4,7 @@ import instance from '../../service/request';
 //初始状态
 const initialState = {
   cart: {},// 商品列表 {id,title, descr,price,img,qty}
-  cartProducts: [],
+  cartProducts: [], // 购物车的 商品列表
   yf: 0,//运费
   kf: "",// 
   svf: 0, // 货到付款费用
@@ -30,6 +30,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+
     SET_ADDCARTSTATE(state, { payload }) {
       state.addCartState = payload
     },

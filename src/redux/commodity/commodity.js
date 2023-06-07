@@ -16,21 +16,43 @@ import instance from '../../service/request';
 const initialState = {
   products: [],
   currentItem: null,
+  hasMore: [true, true],
+  rows: 10
 }
 export const commoditySlice = createSlice({
   name: 'commodity',
   initialState,
   reducers: {
+    SET_HASMORE: (state, { payload }) => {
+      state.hasMore = payload
+    },
     SET_PRODUCTS: (state, { payload }) => {
       state.products = state.products.concat(payload)
     },
     SET_CURRENTITEM: (state, { payload }) => {
       state.currentItem = payload
+    },
+    SET_PRODUCTS_COUNT: (state, { payload }) => {
+      let productsbak = JSON.parse(JSON.stringify(state.products))
+      for (let i = 0; i < productsbak.length; i++) {
+        if (typeof (payload.id) === "string") {
+          if (productsbak[i].id === payload.pid) {
+            productsbak[i].count = payload.count;
+            break;  // 购物车
+          }
+        } else {
+          if (productsbak[i].id === payload.id) {
+            productsbak[i].count = payload.count;
+            break;  // 首页
+          }
+        }
+      }
+      state.products = productsbak
     }
   },
 })
-export const { SET_PRODUCTS, SET_CURRENTITEM } = commoditySlice.actions
-export function commodityHomeAsync(para) {
+export const { SET_PRODUCTS, SET_CURRENTITEM, SET_HASMORE, SET_PRODUCTS_COUNT } = commoditySlice.actions
+export function commodityHomeAsync(para, hasMore, categoroyIndex) {
   // 同步和异步 async是异步
   return async (dispatch) => {
     //请求后台数据的方法。面试时可以instance换成axios.post请求
@@ -38,7 +60,16 @@ export function commodityHomeAsync(para) {
       //val是后端返回来的数据
       if (val.data.success) {
         val = val.data.results
+        console.log(val);
+        // val.forEach(element => {
+        //   element.count = 1
+        // });
         dispatch(SET_PRODUCTS(val))
+        if (val.length % para.rows > 0) {
+          let hasMorebak = JSON.parse(JSON.stringify(hasMore))
+          hasMorebak[categoroyIndex] = false
+          dispatch(SET_HASMORE(hasMorebak))
+        }
       }
     })
   }
@@ -51,6 +82,14 @@ export function getCommodity(id) {
         dispatch(SET_CURRENTITEM(val))
       }
     })
+  }
+}
+export function setProductCount(itemData, num) {
+  return async (dispatch) => {
+    let productbak = JSON.parse(JSON.stringify(itemData))
+    productbak.count = num
+    console.log(productbak);
+    dispatch(SET_PRODUCTS_COUNT(productbak))
   }
 }
 //导出commodity ，让他可以在其他的页面使用，使用方法如下：

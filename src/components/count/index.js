@@ -3,11 +3,13 @@ import React, { useEffect, useState, useRef } from 'react';
 import './index.less';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { adjustQty, removeFromCart, cartSelector } from '../../redux/shopping/cart'
-import { commoditySelector } from '../../redux/commodity/commodity'
+import { orderSelector } from '../../redux/order/order'
+import { commoditySelector, setProductCount } from '../../redux/commodity/commodity'
 
 const Count = ({ itemData }) => {
   const dispatch = useDispatch()
   const { cart, cartProducts, addCartState } = useSelector(cartSelector)
+  const { oneMoreProducts } = useSelector(orderSelector)
   const { products } = useSelector(commoditySelector)
   // const [input, setInput] = useState(!cart["PID" + itemData.pid]?.count ? 0 : cart["PID" + itemData.pid]?.count);
   const [input, setInput] = useState(0);
@@ -25,6 +27,7 @@ const Count = ({ itemData }) => {
     const num = Number(e.target.value) >= 0 ? Number(e.target.value) : 0
     setInput(num);
     dispatch(adjustQty(itemData, num, cart))
+    dispatch(setProductCount(itemData, num))
   };
   const decrement = (itemData, input) => {
     if (!addCartState) return
@@ -35,6 +38,7 @@ const Count = ({ itemData }) => {
     }
     const num = (input - 1) >= 1 ? Number(input - 1) : 0
     dispatch(num > 0 ? adjustQty(itemData, num, cart) : removeFromCart(itemData))
+    dispatch(setProductCount(itemData, num))
     setInput(num)
   };
 
@@ -45,10 +49,14 @@ const Count = ({ itemData }) => {
     if (!pd) {
       pd = cartProducts.find(item => item.id === itemData.pid)
     }
+    if (!pd) {
+      pd = oneMoreProducts.find(item => item.id === itemData.pid)
+    }
     if (pd && pd.total >= count) {
       const num = Number(input + 1);
       setInput(num)
       dispatch(adjustQty(itemData, num, cart))
+      dispatch(setProductCount(itemData, num))
     }
   }
 
@@ -58,7 +66,6 @@ const Count = ({ itemData }) => {
       <div>
         <input min='0'
           type='number'
-          id='qty'
           name='qty'
           value={input}
           onChange={onChangeHandler}

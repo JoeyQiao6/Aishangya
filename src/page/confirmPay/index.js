@@ -122,6 +122,7 @@ const ConfirmPay = () => {
                 type: 'success',
                 content: '已下单，请付款',
               });
+              window.location.href = "/#/payment/" + val.data.results.id
             } else {
               messageApi.open({
                 type: 'error',
