@@ -2,7 +2,7 @@ import React from 'react';
 import './index.less';
 import logo from "../../assets/imgs/profile/logo1.png";
 import { LockOutlined, UserOutlined, MailOutlined, MobileOutlined, HomeOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import picture from "../../assets/imgs/login/picture.png"
 import edit from "../../assets/imgs/login/edit.png"
 import { Link } from "react-router-dom"

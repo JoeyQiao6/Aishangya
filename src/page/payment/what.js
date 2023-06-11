@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef } from "react"
 const PaymentWhat = () => {
   const renderRef = useRef(true); // 防止useEffect执行两次
 
@@ -19,7 +19,7 @@ const PaymentWhat = () => {
   }, [])
   return (
     <div className='Payment-box'>
-      waht
+      what
     </div>
   )
 }

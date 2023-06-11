@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './index.less';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import Count from '../../../components/count';
-import { adjustQty, removeFromCart, cartSelector } from '../../../redux/shopping/cart'
+import { adjustQty, cartSelector } from '../../../redux/shopping/cart'
 import { orderSelector } from '../../../redux/order/order'
 const CartItem = ({ itemData }) => {
   const dispatch = useDispatch()
@@ -17,7 +17,7 @@ const CartItem = ({ itemData }) => {
       dispatch(adjustQty(itemData, count, cart))
     }
   }
-  const { cart, cartProducts, addCartState } = useSelector(cartSelector)
+  const { cart } = useSelector(cartSelector)
   const { oneMoreProducts } = useSelector(orderSelector)
   return (
     <div className="ordercard-item-list-box">

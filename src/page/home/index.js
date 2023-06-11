@@ -1,5 +1,5 @@
 import './index.less';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Footer from '../../components/footer';
 import Personal from '../../components/personal';
 import Search from '../../components/search';
@@ -7,23 +7,9 @@ import MenuItem from './menuItem';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import { homeSectionCategoryInit, dictionarySelector } from '../../redux/common/dictionary'
 import { commodityHomeAsync, commoditySelector } from '../../redux/commodity/commodity'
-import { Tabs, Swiper, DotLoading } from 'antd-mobile'
+import { Tabs, Swiper } from 'antd-mobile'
 import { DemoBlock } from './utils.js'
 import InfiniteScroll from 'react-infinite-scroll-component';
-const InfiniteScrollContent = (hasMore) => {
-  return (
-    <>
-      {hasMore.hasMore ? (
-        <>
-          <span>Loading</span>
-          <DotLoading />
-        </>
-      ) : (
-        <span>--- 我是有底线的 ---</span>
-      )}
-    </>
-  )
-}
 const Home = () => {
   const dispatch = useDispatch()
   const { products, hasMore, rows } = useSelector(commoditySelector)
@@ -48,30 +34,11 @@ const Home = () => {
       resStatebak[categoroyIndex] = true
       setResState(resStatebak)
     }
-  }, [products.length])
-  useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
-    if (categoryList.length === 0) {
-      dispatch(homeSectionCategoryInit())
-    }
-    if (categoryList.length > 0 && products.length === 0) {
-      fetchMoreData()
-    }
-  }, [dispatch, categoryList])
-  // async function loadMore() {
-  //   const append = await mockRequest()
-  //   setData(val => [...val, ...append])
-  //   setHasMore(append.length > 0)
-  // }
-  const fetchMoreData = (pr) => {
+  }, [products.length, categoroyIndex, resState])
+
+  const fetchMoreData = useCallback((pr) => {
     let pagesbak = pages
-    console.log(pr);
     let index = pr ? pr : categoroyIndex
-    console.log(index);
     pagesbak[index] += 1
     setPages(pagesbak)
     const para = {
@@ -84,10 +51,27 @@ const Home = () => {
         category: categoryList[index]
       }
     }
-    console.log(para)
-    console.log(pages)
     dispatch(commodityHomeAsync(para, hasMore, index))
-  }
+  }, [categoroyIndex, categoryList, dispatch, hasMore, pages, rows])
+  useEffect(() => {
+    if (renderRef.current) {
+      // 防止useEffect执行两次
+      renderRef.current = false
+      return
+    }
+    if (categoryList.length === 0) {
+      dispatch(homeSectionCategoryInit())
+    }
+    if (categoryList.length > 0 && products.length === 0) {
+      fetchMoreData()
+    }
+  }, [dispatch, categoryList, fetchMoreData, products.length])
+  // async function loadMore() {
+  //   const append = await mockRequest()
+  //   setData(val => [...val, ...append])
+  //   setHasMore(append.length > 0)
+  // }
+
   async function getProducts(pr) {
     let index = pr ? pr : categoroyIndex
     let resStatebak = resState

@@ -1,9 +1,8 @@
 import React from 'react';
 import './index.less';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import Count from '../../../components/count';
 const CartItem = (({ itemData }) => {
-  // const dispatch = useDispatch()
   let idata = JSON.parse(JSON.stringify(itemData));
   idata["pid"] = idata.id
   return (

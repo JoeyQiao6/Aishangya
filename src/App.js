@@ -3,7 +3,6 @@ import {
   HashRouter as Router,
   Route,
   Routes,
-  Navigate,
 } from "react-router-dom";
 import "./common.sass";
 import Home from "./page/home/index";
@@ -35,7 +34,7 @@ const App = (currentItem) => {
       return;
     }
     dispatch(getCart());
-  }, []);
+  }, [dispatch]);
   return (
     <Router>
       <Routes>

@@ -6,7 +6,7 @@ import {
   Typography,
 } from "antd";
 import backW from '../../assets/imgs/details/back-w.svg'
-const { Header, Content } = Layout;
+const { Header } = Layout;
 const { Title } = Typography;
 const Like = () => {
   return (

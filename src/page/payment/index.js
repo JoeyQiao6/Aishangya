@@ -1,6 +1,6 @@
 import "./index.less"
 import backW from '../../assets/imgs/details/back-w.svg'
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useParams } from 'react-router-dom';
 import { dictionarySelector, getOrderState } from "../../redux/common/dictionary"
 import { useSelector, useDispatch } from "react-redux";
@@ -24,15 +24,8 @@ const Payment = () => {
   const changeMemo = (e) => {
     setMemo(e.target.value)
   }
-  useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
-    getOrder(para.id)
-  }, [para.id, dispatch])
-  const getOrder = (id) => {
+
+  const getOrder = useCallback((id) => {
     dispatch(getOrderState())
     instance.post("/apis/youshan-m/merchantorder/getOrderById", { id }).then((val) => {
       if (val.data.success) {
@@ -40,11 +33,19 @@ const Payment = () => {
         setOrderInfo(val)
         setPay(Number(val.pay))
       } else {
-        console.log(val);
         window.location.href = "/#/"
       }
     })
-  }
+  }, [dispatch]);
+  useEffect(() => {
+    if (renderRef.current) {
+      // 防止useEffect执行两次
+      renderRef.current = false
+      return
+    }
+    getOrder(para.id)
+  }, [para.id, dispatch, getOrder])
+
   useEffect(() => {
     if (orderInfo?.status === 0) {
       instance.post("/apis/youshan-m/payment/getAllPayment").then((val) => {

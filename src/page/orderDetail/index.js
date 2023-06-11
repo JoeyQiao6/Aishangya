@@ -25,7 +25,7 @@ const OrderDetail = () => {
     }
     dispatch(getOrderState())
     dispatch(getOrderById(para.id))
-  }, [dispatch])
+  }, [para.id, dispatch])
   useEffect(() => {
     if (currentOrder.data) {
       const data = JSON.parse(currentOrder.data)
@@ -36,7 +36,7 @@ const OrderDetail = () => {
       }
       dispatch(getImageByIds(pids))
     }
-  }, [currentOrder])
+  }, [currentOrder, dispatch])
 
   const formatDate = (date) => {
     return moment(Number(date)).format('YYYY-MM-DD HH:mm:ss')

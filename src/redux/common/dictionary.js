@@ -16,7 +16,7 @@ const dictionarySlice = createSlice({
     SETCOMMODITYCATEGORY(state, { payload }) {
       state.commodityCategory = payload
       state.categoryList = []
-      state.commodityCategory.map((item) => {
+      state.commodityCategory.forEach((item) => {
         state.categoryList.push(item.type);
       });
     },

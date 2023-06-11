@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router-dom';
 import "./oneMore.less";
 import backW from "../../assets/imgs/details/back-w.svg";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { orderSelector, getOrderWithImageById, getImageByIds } from "../../redux/order/order"
 import { cartSelector } from "../../redux/shopping/cart"
 import Item from './item'
 
 const OneMore = () => {
-  const negative = useNavigate();
   const dispatch = useDispatch()
   const [para] = useState(useParams());
   const renderRef = useRef(true); // 防止useEffect执行两次
@@ -24,15 +22,13 @@ const OneMore = () => {
       return
     }
     dispatch(getOrderWithImageById(para.id))
-  }, [dispatch])
+  })
   useEffect(() => {
     if (currentOrder.data) {
       const data = JSON.parse(currentOrder.data)
-      console.log(data);
       const pids = []
       for (const key in data) {
         pids.push(data[key].pid)
-        console.log(cart[key])
         if (cart[key]) {
           data[key].count = cart[key].count
         } else {
@@ -42,7 +38,7 @@ const OneMore = () => {
       setProducts(data)
       dispatch(getImageByIds(pids))
     }
-  }, [currentOrder])
+  }, [currentOrder, cart, dispatch])
 
   return (
     <div className="one_more">
