@@ -13,8 +13,8 @@ export const lorem = new LoremIpsum({
 })
 
 export const DemoBlock = ({ title, children }) => (
-  <div style={{ padding: 16 }}>
-    <h3>{title}</h3>
+  <div>
+    {/* <h3>{title}</h3> */}
     {children}
   </div>
 );

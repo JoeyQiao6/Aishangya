@@ -27,7 +27,7 @@ const CartItem = ({ itemData }) => {
         <div className="shop-name-remove">
           <p>{itemData.title}</p>
         </div>
-        <p></p>
+       
         <p>￥{itemData.price}</p>
         <div className="shop-count">
           {buttonState ? <Count itemData={itemData} /> : <div className="order_again" onClick={() => { onemore() }}>再来一单</div>}

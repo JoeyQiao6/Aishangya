@@ -1,106 +1,112 @@
 .shop-list-box {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  background: rgba(63, 35, 35, 0.9);
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
-  padding: .4267rem;
-  margin-bottom: .4267rem;
-  border-radius: .4267rem;
-
-  .shop-img {
-    margin-right: .8533rem;
+  .shop-list {
+    position: relative;
     display: flex;
+    flex-wrap: wrap;
+    background: rgba(63, 35, 35, 0.9);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    padding: 0.4267rem;
+    margin-bottom: 0.4267rem;
+    border-radius: 0.4267rem;
 
-    img {
-      width: 5.3333rem;
-      height: 5.3333rem;
-      overflow: hidden;
-    }
-  }
-
-  .shop-des {
-    // display: flex;
-    // flex-direction: column;
-    width: 46%;
-    color: white;
-
-    .shop-name-remove {
+    .shop-img {
+      margin-right: 0.8533rem;
       display: flex;
-      justify-content: space-between;
+
+      img {
+        width: 5.3333rem;
+        height: 5.3333rem;
+        overflow: hidden;
+      }
+    }
+
+    .shop-des {
+      width: 46%;
+      color: white;
+
+      .shop-name-remove {
+        display: flex;
+        justify-content: space-between;
+
+        div {
+          border-radius: 0.9067rem;
+          border: 1px solid #d5d5d5;
+          text-align: center;
+          padding: 0.1133rem 0.7267rem;
+          height: 1.0667rem;
+          line-height: 1.0667rem;
+
+          p {
+            font-size: 0.7467rem;
+            margin-bottom: unset;
+            padding-top: 0.05rem;
+          }
+        }
+      }
 
       p {
-        font-size: .8533rem;
-        margin-bottom: .4267rem;
+        &:nth-child(1) {
+          font-size: 0.8533rem;
+          margin-bottom: 0.4267rem;
+        }
+        &:nth-child(2) {
+          color: #d5d5d5;
+          font-size: 0.7467rem;
+          margin-bottom: 0.8533rem;
+        }
+
+        &:nth-child(3) {
+          color: #f0c04c;
+          font-weight: 500;
+          font-size: 1.0667rem;
+        }
       }
 
-      div {
-        border-radius: .9067rem;
-        border: 1px solid #d5d5d5;
-        text-align: center;
-        padding: .1133rem .7267rem;
-        height: 1.0667rem;
-        line-height: 1.0667rem;
+      .shop-count {
+        position: absolute;
+        right: 0.65333rem;
+        bottom: 0.5rem;
 
-        p {
-          font-size: .7467rem;
-          margin-bottom: unset;
-          padding-top: .05rem;
+        .count-box {
+          width: 4.5333rem;
 
+          div {
+            input {
+              width: 1.5333rem;
+              margin-top: 0.2rem;
+              font-size: 0.7467rem;
+            }
+          }
+
+          div {
+            font-size: 0.8533rem;
+
+            &:nth-child(1),
+            &:nth-child(3) {
+              padding: 0rem 0.62rem;
+            }
+
+            &:nth-child(1) {
+              padding-right: unset;
+            }
+
+            &:nth-child(3) {
+              padding-left: unset;
+            }
+          }
         }
       }
     }
-
-    p {
-      &:nth-child(2) {
-        color: #d5d5d5;
-        font-size: .7467rem;
-        margin-bottom: .8533rem;
-
-      }
-
-      &:nth-child(3) {
-        color: #f0c04c;
-        font-weight: 500;
-        font-size: 1.0667rem
-      }
-    }
-
-    .shop-count {
-      position: absolute;
-      right: .65333rem;
-      bottom: .5rem;
-
-      .count-box {
-        width: 4.5333rem;
-
-
-        div {
-          input {
-            width: 1.5333rem;
-            margin-top: .2rem;
-            font-size: .7467rem;
-          }
-        }
-
-        div {
-          font-size: .8533rem;
-
-          &:nth-child(1),
-          &:nth-child(3) {
-            padding: 0rem 0.62rem;
-          }
-
-          &:nth-child(1) {
-            padding-right: unset;
-          }
-
-          &:nth-child(3) {
-            padding-left: unset;
-          }
-        }
-      }
+  }
+  .shop-like {
+    position: absolute;
+    right: 0.5rem;
+    top: .1rem;
+    img {
+      width: 2.24rem;
+      height: 2.24rem
     }
   }
 }
