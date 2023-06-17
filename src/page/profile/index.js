@@ -3,6 +3,7 @@ import React from "react";
 import Profiler from "../../assets/imgs/profile/profile.png";
 import Personal from "../../components/personal";
 import hisShopping from "../../assets/imgs/profile/hisShopping.png";
+import personalCenter from "../../assets/imgs/profile/personal-center.png";
 import address from "../../assets/imgs/profile/address.png";
 import logout from "../../assets/imgs/profile/logout.png";
 import help from "../../assets/imgs/profile/help.png";
@@ -51,6 +52,15 @@ const Profile = () => {
           <div>
             <img src={help} alt=""></img>
             <p>帮助中心</p>
+          </div>
+          <img src={morethen} alt=""></img>
+        </div>
+        <div onClick={() => {
+            negative("/updateProfile");
+          }}>
+          <div>
+            <img src={personalCenter} alt="" style={{ width: '20px', height: '20px' }} ></img>
+            <p>修改个人信息</p>
           </div>
           <img src={morethen} alt=""></img>
         </div>

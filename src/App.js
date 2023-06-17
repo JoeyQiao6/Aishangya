@@ -20,6 +20,7 @@ import Payment from "./page/payment"
 import WhatIsTradeId from "./page/payment/what"
 // import Address from './page/address';
 import AddressAll from "./page/addressAll/index";
+import UpdateProfile from "./page/updateProfile/index";
 import { connect, useDispatch } from "react-redux";
 import { useEffect, useRef } from "react";
 import { getCart } from "./redux/shopping/cart";
@@ -47,6 +48,7 @@ const App = (currentItem) => {
         <Route path="/confirmPay" element={<ConfirmPay />}></Route>
         <Route path="/addressAll" element={<AddressAll />}></Route>
         <Route path="/orderCard" element={<OrderCard />}></Route>
+        <Route path="/updateProfile" element={<UpdateProfile />}></Route>
         <Route path="/orderDetail/:id" element={<OrderDetail />}></Route>
         <Route exact path="/payment/:id" element={<Payment />}></Route>
         <Route exact path="/details/:id" element={<Detail />}></Route>
