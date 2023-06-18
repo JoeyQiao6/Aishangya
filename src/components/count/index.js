@@ -5,6 +5,7 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { adjustQty, removeFromCart, cartSelector } from '../../redux/shopping/cart'
 import { orderSelector } from '../../redux/order/order'
 import { commoditySelector, setProductCount } from '../../redux/commodity/commodity'
+import { setLikeCount } from "../../redux/like/like"
 
 const Count = ({ itemData }) => {
   const dispatch = useDispatch()
@@ -28,6 +29,7 @@ const Count = ({ itemData }) => {
     setInput(num);
     dispatch(adjustQty(itemData, num, cart))
     dispatch(setProductCount(itemData, num))
+    dispatch(setLikeCount(itemData, num))
   };
   const decrement = (itemData, input) => {
     if (!addCartState) return
@@ -39,6 +41,7 @@ const Count = ({ itemData }) => {
     const num = (input - 1) >= 1 ? Number(input - 1) : 0
     dispatch(num > 0 ? adjustQty(itemData, num, cart) : removeFromCart(itemData))
     dispatch(setProductCount(itemData, num))
+    dispatch(setLikeCount(itemData, num))
     setInput(num)
   };
 
@@ -57,6 +60,7 @@ const Count = ({ itemData }) => {
       setInput(num)
       dispatch(adjustQty(itemData, num, cart))
       dispatch(setProductCount(itemData, num))
+      dispatch(setLikeCount(itemData, num))
     }
   }
 

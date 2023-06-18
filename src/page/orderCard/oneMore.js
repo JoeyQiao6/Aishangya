@@ -22,7 +22,7 @@ const OneMore = () => {
       return
     }
     dispatch(getOrderWithImageById(para.id))
-  })
+  }, [para.id, dispatch])
   useEffect(() => {
     if (currentOrder.data) {
       const data = JSON.parse(currentOrder.data)
@@ -49,19 +49,6 @@ const OneMore = () => {
       {Object.keys(products).map((key, index) => (
         <Item key={index} itemData={products[key]} />
       ))}
-      {/* <div className='total-box'>
-        <div className='total-item'>
-          <span>共</span>
-          <span> {cartAmount}</span>
-          <span>件</span></div>
-        <div className='total-right'>
-          <div className='total-price'>
-            <span>￥</span>
-            <span>{total}</span>
-          </div>
-          <Link to="/confirmPay" className='total-btn'>結算</Link>
-        </div>
-      </div> */}
     </div >
   );
 };

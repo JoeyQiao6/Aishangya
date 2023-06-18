@@ -88,7 +88,6 @@ export function setProductCount(itemData, num) {
   return async (dispatch) => {
     let productbak = JSON.parse(JSON.stringify(itemData))
     productbak.count = num
-    console.log(productbak);
     dispatch(SET_PRODUCTS_COUNT(productbak))
   }
 }
