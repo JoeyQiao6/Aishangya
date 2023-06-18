@@ -20,14 +20,7 @@ const Home = () => {
   const [pages, setPages] = useState([0, 0])
   const [categoroyIndex, setCategoryIndex] = useState(0)
   const [resState, setResState] = useState([true, true])
-  useEffect(() => {
-    // const element = elementRef.current;
-    // const handleWheel = (event) => { };
-    // element.addEventListener('wheel', handleWheel, { passive: true });
-    // return () => {
-    //   element.removeEventListener('wheel', handleWheel, { passive: true });
-    // };
-  }, []);
+
   useEffect(() => {
     if (products.length > 0) {
       let resStatebak = resState

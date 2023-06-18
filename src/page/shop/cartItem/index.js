@@ -4,12 +4,14 @@ import { connect, useDispatch } from 'react-redux';
 import Count from '../../../components/count';
 import { removeFromCart } from "../../../redux/shopping/cart"
 import { setProductCount } from '../../../redux/commodity/commodity'
+import { setLikeCount } from "../../../redux/like/like"
 
 const CartItem = ({ itemData }) => {
   const dispatch = useDispatch()
   const remove = () => {
     dispatch(removeFromCart(itemData))
     dispatch(setProductCount(itemData, 0))
+    dispatch(setLikeCount(itemData, 0))
   }
   return (
     <div className="shop-cartitem-list-box">
