@@ -8,15 +8,18 @@ import { cartSelector } from "../../redux/shopping/cart"
 import { Link } from "react-router-dom"
 const Shop = () => {
   const { total, cart, cartAmount } = useSelector(cartSelector)
+  const pageHeight = document.documentElement.scrollHeight - 34 - 30 - 75 - 55 - 20;
   return (
     <div className="shop-box">
       <div className="shop-back">
         <img src={backW} alt="" onClick={() => { window.history.back() }}></img>
         <p>购物车</p>
       </div>
-      {Object.keys(cart).map((key, index) => (
-        <CartItem key={index} itemData={cart[key]} />
-      ))}
+      <div className='box-list' style={{ height: pageHeight }}>
+        {Object.keys(cart).map((key, index) => (
+          <CartItem key={index} itemData={cart[key]} />
+        ))}
+      </div>
       <div className='total-box'>
         <div className='total-item'>
           <span>共</span>
@@ -31,7 +34,7 @@ const Shop = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </div >
   );
 }
 

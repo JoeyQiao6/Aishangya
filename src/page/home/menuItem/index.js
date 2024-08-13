@@ -1,17 +1,16 @@
 import React from "react";
 import "./index.less";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import Count from "../../../components/count";
 import unlike from "../../../assets/imgs/home/unlike1.svg";
 import like from "../../../assets/imgs/home/like.svg";
-import { useState } from 'react';
-
+import { updateLike } from "../../../redux/commodity/commodity"
 const CartItem = ({ itemData }) => {
-  const [isLiked, setIsLiked] = useState(false);
-
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
+  const dispatch = useDispatch()
+  const toggleLike = (data) => {
+    dispatch(updateLike({ pid: data.id }))
   };
+
   let idata = JSON.parse(JSON.stringify(itemData));
   idata["pid"] = idata.id;
 
@@ -33,8 +32,8 @@ const CartItem = ({ itemData }) => {
           </div>
         </div>
       </div>
-      <div className="shop-like" onClick={toggleLike}>
-        <img src={isLiked ? like : unlike} alt="" />
+      <div className="shop-like" onClick={() => { toggleLike(itemData) }}>
+        <img src={itemData.love ? like : unlike} alt="" />
       </div>
     </div>
   );

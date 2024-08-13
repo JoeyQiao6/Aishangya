@@ -9,33 +9,46 @@ import Home from "./page/home/index";
 import Profile from "./page/profile";
 import Shop from "./page/shop";
 import Like from "./page/like";
-import Detail from "./page/details";
 import Login from "./page/login";
 import Register from "./page/register";
 import ConfirmPay from "./page/confirmPay";
 import OrderCard from "./page/orderCard";
+import RefunderList from "./page/refunder"
+import RefunderDetail from "./page/refunder/detail"
+import RefunderApply from "./page/orderCard/refunderApply"
 import OneMore from "./page/orderCard/oneMore";
 import OrderDetail from "./page/orderDetail";
 import Payment from "./page/payment"
 import WhatIsTradeId from "./page/payment/what"
-// import Address from './page/address';
 import AddressAll from "./page/addressAll/index";
 import UpdateProfile from "./page/updateProfile/index";
 import { connect, useDispatch } from "react-redux";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCart } from "./redux/shopping/cart";
-
+import { getUserInfo } from "./redux/profile/profile";
+import 'default-passive-events'
 const App = (currentItem) => {
   const dispatch = useDispatch();
   const renderRef = useRef(true); // 防止useEffect执行两次
+  const [loginState, setLoginState] = useState(false)
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false;
-      return;
+    // if (!renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   return
+    // }
+    // renderRef.current = false
+    if (localStorage.getItem("loginState") === 'true') {
+      setLoginState(true)
+    } else {
+      window.location.href = "/#/login";
     }
-    dispatch(getCart());
-  }, [dispatch]);
+  });
+  useEffect(() => {
+    if (loginState) {
+      dispatch(getUserInfo());
+      dispatch(getCart());
+    }
+  }, [dispatch, loginState]);
   return (
     <Router>
       <Routes>
@@ -48,10 +61,13 @@ const App = (currentItem) => {
         <Route path="/confirmPay" element={<ConfirmPay />}></Route>
         <Route path="/addressAll" element={<AddressAll />}></Route>
         <Route path="/orderCard" element={<OrderCard />}></Route>
+        <Route path="/refunderApply/:id" element={<RefunderApply />}></Route>
+        <Route path="/refunderList" element={<RefunderList />}></Route>
+        <Route path="/refunderDetail/:id" element={<RefunderDetail />}></Route>
         <Route path="/updateProfile" element={<UpdateProfile />}></Route>
         <Route path="/orderDetail/:id" element={<OrderDetail />}></Route>
         <Route exact path="/payment/:id" element={<Payment />}></Route>
-        <Route exact path="/details/:id" element={<Detail />}></Route>
+        {/* <Route exact path="/details/:id" element={<Detail />}></Route> */}
         <Route exact path="/onemore/:id" element={<OneMore />}></Route>
         <Route exact path="/whatistradeid" element={<WhatIsTradeId />}></Route>
       </Routes>

@@ -17,11 +17,11 @@ const ConfirmPay = () => {
   const [paymentState, setPaymentState] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
     dispatch(getFare())
     dispatch(getAddress())
     dispatch(getPayment())
@@ -65,7 +65,7 @@ const ConfirmPay = () => {
       payid: 0,
       status: 0, //订单状态||radiobox|*等待付款=>0,已付款=>1,已发货=>2,订单取消=>3,货到付款=>4,货到付款已发货=>5,订单完成=>6
       uid: 0, //订单用户编号
-      pay: paymentSelect?.id, //支付方式
+      pay: paymentSelect?.value, //支付方式
       uname: "", //订单用户
       umail: "", //订单用户邮箱
       mobile: "", //订单用户手机
@@ -88,8 +88,10 @@ const ConfirmPay = () => {
       wuliu: "", //物流
       totald: 0,
       yf: yf, //运费
-      ld: kf === "冷冻" ? fareKFOb[kf].fare : 0, //冷冻
-      lc: kf === "冷藏" ? fareKFOb[kf].fare : 0, //冷藏
+      // ld: kf === "冷冻" ? fareKFOb[kf].fare : 0, //冷冻
+      // lc: kf === "冷藏" ? fareKFOb[kf].fare : 0, //冷藏
+      ld: 0, //冷冻
+      lc: 0, //冷藏
       shtime: takeTime, //    时间段
       rate: rate, //汇率
     }
@@ -111,11 +113,12 @@ const ConfirmPay = () => {
               price: element.price,
               total: element.price * cart["PID" + element.id].count,
               pident: "",
+              tax: element.tax,
+              taxtype: element.taxtype
             };
           });
           order.data = JSON.stringify(res);
           instance.post('/apis/youshan-m/merchantorder/createOrder', order).then((val) => {
-            console.log(val);
             if (val.data.success) {
               dispatch(clearCart())
               messageApi.open({
@@ -134,6 +137,8 @@ const ConfirmPay = () => {
       });
     }
   }
+
+  const pageHeight = document.documentElement.scrollHeight - 63 - 110 - 58 - 28 - 60 - 50;
   return (
     <div className='ConfirmPay-box'>
       {contextHolder}
@@ -191,11 +196,11 @@ const ConfirmPay = () => {
         </div> */}
 
         这里是购买的商品~
-        <div className='product-list'>
+        <div className='product-list' style={{ height: pageHeight }}>
           {Object.keys(cart).map((key, index) => (
             <CartItem key={index} itemData={cart[key]} />
           ))}
-          <div className='yf'>
+          {/* <div className='yf'>
             <Radio.Group value={kf} onChange={onChangeKF}>
               {
                 Object.keys(fareKFOb).map((key) => (
@@ -203,7 +208,7 @@ const ConfirmPay = () => {
                 ))
               }
             </Radio.Group>
-          </div>
+          </div> */}
           <div className='social-type'>
             <label>送货时间：</label>
             <Radio.Group value={takeTime} onChange={onChangeTT}>
@@ -238,13 +243,13 @@ const ConfirmPay = () => {
                   ) : (
                     ""
                   )}
-                  {fareKFOb[kf]?.title ? (
+                  {/* {fareKFOb[kf]?.title ? (
                     <div >
                       <span>{fareKFOb[kf].title}</span>
                     </div>
                   ) : (
                     ""
-                  )}
+                  )} */}
                 </div>
                 <div className='PD-right'>
                   <div >
@@ -264,13 +269,13 @@ const ConfirmPay = () => {
                   ) : (
                     ""
                   )}
-                  {fareKFOb[kf]?.fare ? (
+                  {/* {fareKFOb[kf]?.fare ? (
                     <div >
                       <span>{fareKFOb[kf].fare}</span>
                     </div>
                   ) : (
                     ""
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className='price-total'>
@@ -279,12 +284,30 @@ const ConfirmPay = () => {
                 </div>
                 {rate > 0 ?
                   <div >
-                    <span>{Math.floor((total + yf + svf + fareKFOb[kf]?.fare) * rate)}元(RMB)</span>
+                    <span>
+                      {
+                        Math.floor(
+                          (
+                            total +
+                            yf +
+                            svf
+                            // fareKFOb[kf]?.fare
+                          ) * rate
+                        )
+                      }元(RMB)
+                    </span>
                   </div> : ""
                 }
 
                 <div>
-                  <span>{total + yf + svf + fareKFOb[kf]?.fare}円</span>
+                  <span>
+                    {
+                      total +
+                      yf +
+                      svf
+                      // fareKFOb[kf]?.fare
+                    }円
+                  </span>
                 </div>
               </div>
             </div>
@@ -300,7 +323,14 @@ const ConfirmPay = () => {
         <div className='total-right'>
           <div className='total-price'>
             <span></span>
-            <span>{total + yf + svf + fareKFOb[kf]?.fare}円</span>
+            <span>
+              {
+                total +
+                yf +
+                svf
+                // fareKFOb[kf]?.fare
+              }円
+            </span>
           </div>
           <button className='total-btn' onClick={() => { save() }}>去支付</button>
         </div>

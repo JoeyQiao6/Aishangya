@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { message } from 'antd';
 const instance = axios.create({
     timeout: 30000
 })
@@ -15,11 +16,12 @@ instance.interceptors.request.use((config) => {
 
 // 响应拦截器
 instance.interceptors.response.use((res) => {
-    // console.log('被拦截做的一些操作2', res)
     if (!res.data.success) {
+
         switch (res.data.results) {
             case "logout":
                 console.log('请登录')
+                localStorage.setItem("loginState", false)
                 window.location.href = "/#/login"
                 break
             default:

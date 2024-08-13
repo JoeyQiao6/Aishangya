@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import instance from '../../service/request';
-
 //初始状态
 const initialState = {
   cart: {},// 商品列表 {id,title, descr,price,img,qty}
@@ -106,6 +105,30 @@ const cartSlice = createSlice({
         }
       }
     },
+    UPDATE_CART_COUNT: {
+      //reducer是主要要执行的方法
+      reducer(state, { payload }) {
+        const key = "PID" + payload.cart.pid
+        if (!state.cart[key]) {
+          payload.cart.count = 0
+          state.cart[key] = payload.cart
+        }
+        let count = state.cart[key]["count"] + payload.count
+        const cart = Object.assign({}, state.cart[key]);
+        cart.count = count
+        cart.total = count * cart["price"]
+        state.cart[key] = cart;
+      },
+      // 封装参数，是固定写法
+      prepare(cart, count) {
+        return {
+          payload: {
+            cart: cart,
+            count: count
+          }
+        }
+      }
+    },
     // 更新商品数量 UPDATE_COUNT_CART
     // UPDATE_COUNT_CART 接收两个参数，分别是商品 id 和数量。它会更新购物车中指定商品的数量，并重新计算该商品的总价。
     UPDATE_COUNT_CART: {
@@ -158,12 +181,15 @@ const cartSlice = createSlice({
       }
     },
     SET_ADDRESS: (state, { payload }) => {
-      state.address = payload
-      payload.forEach((element) => {
-        if (element.state === 1) {
+      state.address = payload[0]
+      payload[0].forEach((element) => {
+        if (element.id === payload[1]) {
           state.addrSelect = element
         }
       });
+    },
+    SET_ADDRSELECT: (state, { payload }) => {
+      state.addrSelect = payload
     },
     SET_PAYMENT: (state, { payload }) => {
       state.payment = payload
@@ -198,7 +224,7 @@ const cartSlice = createSlice({
 
 export default cartSlice.reducer
 //cartSlice.actions 声明式引入，这样的话 ADD_CART, RESET_TOTAL_AMOUNT这些都可以在外面用，相当于有个参数
-export const { SET_ADDCARTSTATE, SET_CARTPRODUCTS, CLEAR_CART, SET_TAKETIME, SET_TAKETIMETYPE, SET_RATE, SET_KF, ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_PAYMENT, SET_PAYMENTSELECT, SET_FAREOB, RESET_FARE } = cartSlice.actions
+export const { UPDATE_CART_COUNT, SET_ADDCARTSTATE, SET_CARTPRODUCTS, CLEAR_CART, SET_TAKETIME, SET_TAKETIMETYPE, SET_RATE, SET_KF, ADD_CART, RESET_TOTAL_AMOUNT, REMOVE_CART, UPDATE_COUNT_CART, SET_ADDRESS, SET_ADDRSELECT, SET_PAYMENT, SET_PAYMENTSELECT, SET_FAREOB, RESET_FARE } = cartSlice.actions
 export const cartSelector = (state) => state.cart;
 export const clearCart = () => {
   return async (dispatch) => {
@@ -208,18 +234,46 @@ export const clearCart = () => {
     dispatch(RESET_TOTAL_AMOUNT())
   };
 }
-export const addToCart = (product, count) => {
+export const addToCart = (product, count, cartOb) => {
   return async (dispatch) => {
-    //想要调用上面声明的方法ADD_CART 就必须用dispatch
-    dispatch(ADD_CART(product, count))
-    // 接0.1
-    dispatch(RESET_TOTAL_AMOUNT())
+    dispatch(SET_ADDCARTSTATE(false))
+    const key = "PID" + product.id
+    let cart = {}
+    if (cartOb[key]) {
+      cart = {
+        id: cartOb[key]["id"],
+        pid: cartOb[key]["pid"],
+        count,
+      }
+    } else {
+      cart = {
+        pid: product.id,
+        count,
+      }
+    }
+    instance.post('/apis/youshan-m/cart/addCount', cart).then((val) => {
+      dispatch(SET_ADDCARTSTATE(true))
+      if (val.data.success) {
+        let cartR = {
+          "id": val.data.results.id,
+          "pid": product.id,
+          "pident": "",
+          "image": product.image,
+          "title": product.title,
+          "price": product.price,
+          "total": product.price * count,
+          "category": product.category
+        }
+        dispatch(UPDATE_CART_COUNT(cartR, count))
+        dispatch(RESET_TOTAL_AMOUNT())
+
+      }
+    })
   };
 }
 
 export const removeFromCart = (cart) => {
   return async (dispatch) => {
-    console.log(cart);
     instance.post('/apis/youshan-m/cart/delCart', { pid: cart.pid }).then((val) => {
       if (val.data.success) {
         dispatch(REMOVE_CART(cart.pid))
@@ -288,13 +342,19 @@ export const getCart = () => {
     })
   };
 };
+export const setAddSelect = (address) => {
+  return async (dispatch) => {
+    dispatch(SET_ADDRSELECT(address))
+  }
+}
 export const getAddress = () => {
   return async (dispatch) => {
-    instance.post('/apis/youshan-m/merchantaddress/queryByUname').then((val) => {
+    instance.post('/apis/youshan-m/merchantaddress/queryByUid').then((val) => {
+      console.log(val);
       if (val.data.success) {
-        dispatch(SET_ADDRESS(val.data.results));
+        dispatch(SET_ADDRESS([val.data.results["address"], val.data.results["user"]["address"]]));
       } else {
-        dispatch(SET_ADDRESS([]));
+        dispatch(SET_ADDRESS([[], ""]));
       }
     })
   };
@@ -364,6 +424,7 @@ export const getRate = () => {
 export const getTakeTimeType = () => {
   return async (dispatch) => {
     instance.post('/apis/common/dictionary/queryByGroupIds', ["take_time_type_merchant"]).then((val) => {
+      console.log(val);
       if (val.status === 200) {
         dispatch(SET_TAKETIMETYPE(val.data.take_time_type_merchant))
       }

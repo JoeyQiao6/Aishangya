@@ -1,21 +1,20 @@
 import './index.less';
-import avatar from "../../assets/imgs/profile/avatar.jpg";
-import logo from "../../assets/imgs/profile/logo1.png";
-
-
+import logo from "../../assets/imgs/logo/logo3.png";
+import { profileSelector } from "../../redux/profile/profile"
+import { useSelector } from 'react-redux';
 const Personal = () => {
+  const { profile } = useSelector(profileSelector)
+  console.log(profile);
   return (
     <div className='personal-box'>
       <div className='personal-avatar'>
-        <img src={avatar} alt=""></img>
+        <img src={logo} alt="" style={{ objectFit: "cover" }}></img>
         <div className='personal-name'>
-          <p>JOEY</p>
-          <p>+8107015120606</p>
+          <p>{profile.unick} (账户余额：{profile.money})</p>
+          <p>{profile.mobile}</p>
         </div>
       </div>
-      <div className='personal-logo'>
-        <img src={logo} alt=""></img>
-      </div>
+
     </div>
   )
 }

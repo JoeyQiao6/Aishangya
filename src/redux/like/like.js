@@ -13,8 +13,6 @@ export const likeSlice = createSlice({
     },
     SET_LIKE(state, { payload }) {
       let likesbak = JSON.parse(JSON.stringify(state.likes))
-      console.log(likesbak);
-      console.log(payload);
       for (let i = 0; i < likesbak.length; i++) {
         if (typeof (payload.id) === "string") {
           if (likesbak[i].id === payload.pid) {
@@ -30,9 +28,19 @@ export const likeSlice = createSlice({
       }
       state.likes = likesbak
     },
+    DEL_LIKE(state, { payload }) {
+      let likesbak = JSON.parse(JSON.stringify(state.likes))
+      for (let i = 0; i < likesbak.length; i++) {
+        if (likesbak[i].id === payload) {
+          likesbak.splice(i, 1)
+          break;  // 首页
+        }
+      }
+      state.likes = likesbak
+    },
   },
 })
-export const { SET_LIKES, SET_LIKE } = likeSlice.actions
+export const { SET_LIKES, SET_LIKE, DEL_LIKE } = likeSlice.actions
 export function getLike(para) {
   // 同步和异步 async是异步
   return async (dispatch) => {
@@ -48,12 +56,19 @@ export function getLike(para) {
 }
 export function setLikeCount(itemData, num) {
   return async (dispatch) => {
-    console.log(itemData);
-    console.log(num);
     let productbak = JSON.parse(JSON.stringify(itemData))
     productbak.count = num
-    console.log(productbak);
     dispatch(SET_LIKE(productbak))
+  }
+}
+export function delLike(pid) {
+  // 同步和异步 async是异步
+  return async (dispatch) => {
+    instance.post("/apis/youshan-m/merchantlike/delLike", { pid }).then((val) => {
+      if (val.data.success) {
+        dispatch(DEL_LIKE(pid))
+      }
+    })
   }
 }
 export const likeSelector = (state) => state.like;

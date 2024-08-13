@@ -16,15 +16,16 @@ const Count = ({ itemData }) => {
   const [input, setInput] = useState(0);
   const renderRef = useRef(true); // 防止useEffect执行两次
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
     setInput(itemData.count)
   }, [itemData])
 
   const onChangeHandler = (e) => {
+    e.preventDefault();
     const num = Number(e.target.value) >= 0 ? Number(e.target.value) : 0
     setInput(num);
     dispatch(adjustQty(itemData, num, cart))

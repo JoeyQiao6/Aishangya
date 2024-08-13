@@ -1,24 +1,12 @@
 import React, { useState } from 'react';
 import './index.less';
-import { connect, useDispatch, useSelector } from 'react-redux';
-import Count from '../../../components/count';
-import { adjustQty, cartSelector } from '../../../redux/shopping/cart'
-import { orderSelector } from '../../../redux/order/order'
+import { connect } from 'react-redux';
+import CountSec from '../../../components/count/CountSec'
 const CartItem = ({ itemData }) => {
-  const dispatch = useDispatch()
-  const [buttonState, setButtonState] = useState(false)
-  const onemore = () => {
-    setButtonState(true)
-    console.log(itemData);
-    const count = itemData.count + 1
-    let pd = oneMoreProducts.find(item => item.id === itemData.pid)
-    if (pd && pd.total >= count) {
-      itemData.count = count
-      dispatch(adjustQty(itemData, count, cart))
-    }
-  }
-  const { cart } = useSelector(cartSelector)
-  const { oneMoreProducts } = useSelector(orderSelector)
+  const [visible, setVisible] = useState(false)
+  let idata = JSON.parse(JSON.stringify(itemData));
+  idata["id"] = idata.pid
+  itemData = idata
   return (
     <div className="ordercard-item-list-box">
       <div className='shop-img'><img src={itemData.image} alt=""></img>
@@ -27,12 +15,12 @@ const CartItem = ({ itemData }) => {
         <div className="shop-name-remove">
           <p>{itemData.title}</p>
         </div>
-       
+
         <p>￥{itemData.price}</p>
         <div className="shop-count">
-          {buttonState ? <Count itemData={itemData} /> : <div className="order_again" onClick={() => { onemore() }}>再来一单</div>}
-
+          <div className="order_again" onClick={() => { setVisible(true) }}>添加购物车</div>
         </div>
+        <CountSec visible={visible} setVisible={setVisible} itemData={itemData} />
       </div>
     </div>
   );

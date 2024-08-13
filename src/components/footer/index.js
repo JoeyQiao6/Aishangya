@@ -21,9 +21,9 @@ const Footer = () => {
 
       <div style={{ position: 'relative' }}>
         <NavLink to="/shop" className="fontcolor">
-          <i className='iconfont icon-shop'></i>
+          <i className='iconfont icon-shop' ></i>
           <p>购物车</p></NavLink>
-        <span>{cartAmount}</span>
+        <span style={{ color: "white" }}>{cartAmount}</span>
       </div>
       <div>
         <NavLink to="/like" className="fontcolor">

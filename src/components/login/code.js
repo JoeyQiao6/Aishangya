@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import './index.less';
 import instance from '../../service/request';
-const CodeImage = ({ code, width = 80, height = 40 }) => {
+const CodeImage = ({ code, width = 90, height = 40 }) => {
   const canvasRef = useRef(null);
   useEffect(() => {
     if (code === "") {
       return
     }
-    console.log("code", code)
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
@@ -15,7 +14,7 @@ const CodeImage = ({ code, width = 80, height = 40 }) => {
     ctx.clearRect(0, 0, width, height);
 
     // Set the font and text color
-    ctx.font = '1.0667rem serif';
+    ctx.font = '1rem serif';
     ctx.fillStyle = 'White';
 
     // Draw the code on the canvas
@@ -29,7 +28,7 @@ const CodeImage = ({ code, width = 80, height = 40 }) => {
 
 const App = forwardRef((props, ref) => {
   const generateCode = () => {
-    instance.get("/apis/code").then((val) => {
+    instance.get("/apis/youshan-m/index/code").then((val) => {
       if (val.data.success) {
         setCode(val.data.results)
       } else { setCode("") }
@@ -40,16 +39,15 @@ const App = forwardRef((props, ref) => {
 
   const renderRef = useRef(true); // 防止useEffect执行两次
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
     if (code === "") { generateCode() }
 
   })
   const handleClick = () => {
-    console.log("handleClick")
     generateCode()
   };
 

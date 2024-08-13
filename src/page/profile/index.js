@@ -1,25 +1,28 @@
 import "./index.less";
-import React from "react";
-import Profiler from "../../assets/imgs/profile/profile.png";
+import React, { useState } from "react";
+import Profiler from "../../assets/imgs/profile/baidao.png";
 import Personal from "../../components/personal";
 import hisShopping from "../../assets/imgs/profile/hisShopping.png";
 import personalCenter from "../../assets/imgs/profile/personal-center.png";
 import address from "../../assets/imgs/profile/address.png";
 import logout from "../../assets/imgs/profile/logout.png";
-import help from "../../assets/imgs/profile/help.png";
 import morethen from "../../assets/imgs/profile/morethen.png";
 import Footer from "../../components/footer";
 import instance from "../../service/request";
 import { useNavigate } from "react-router-dom";
-
+import { ImageViewer } from 'antd-mobile'
+import gongzhonghao from "../../assets/imgs/logo/gongzhonghao.jpg";
+import { WechatOutlined } from "@ant-design/icons";
 const Profile = () => {
   const negative = useNavigate();
   const logoutfunc = () => {
-    instance.post("/apis/logout").then(() => {
+    instance.post("/apis/youshan-m/index/logout").then(() => {
+      localStorage.setItem("loginState", false)
       window.location.href = "/#/login";
-      window.location.reload();
     });
   };
+
+  const [imgVisible, setImgVisible] = useState(false);
   return (
     <div className="profile">
       <div className="profile-header">
@@ -29,11 +32,20 @@ const Profile = () => {
       <Personal />
       <div className="profile-list">
         <div onClick={() => {
-            negative("/orderCard");
-          }}>
+          negative("/orderCard");
+        }}>
           <div>
             <img src={hisShopping} alt=""></img>
             <p>订单管理</p>
+          </div>
+          <img src={morethen} alt=""></img>
+        </div>
+        <div onClick={() => {
+          negative("/refunderList");
+        }}>
+          <div>
+            <img src={hisShopping} alt=""></img>
+            <p>退货管理</p>
           </div>
           <img src={morethen} alt=""></img>
         </div>
@@ -48,19 +60,21 @@ const Profile = () => {
           </div>
           <img src={morethen} alt=""></img>
         </div>
-        <div>
+        <div onClick={() => {
+          negative("/updateProfile");
+        }}>
           <div>
-            <img src={help} alt=""></img>
-            <p>帮助中心</p>
+            <img src={personalCenter} alt="" style={{ width: '20px', height: '20px' }} ></img>
+            <p>修改个人信息</p>
           </div>
           <img src={morethen} alt=""></img>
         </div>
         <div onClick={() => {
-            negative("/updateProfile");
-          }}>
+          setImgVisible(true)
+        }}>
           <div>
             <img src={personalCenter} alt="" style={{ width: '20px', height: '20px' }} ></img>
-            <p>修改个人信息</p>
+            <p>联系客服人员</p>
           </div>
           <img src={morethen} alt=""></img>
         </div>
@@ -77,6 +91,13 @@ const Profile = () => {
         </div>
       </div>
       <Footer />
+      <ImageViewer
+        image={gongzhonghao}
+        visible={imgVisible}
+        onClose={() => {
+          setImgVisible(false)
+        }}
+      />
     </div>
   );
 };

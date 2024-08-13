@@ -7,7 +7,10 @@ import MenuItem from '@mui/material/MenuItem';
 import instance from '../../service/request';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { message } from 'antd';
 const AddressInfo = (addPara) => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [errors, setErrors] = useState({});
   const [option, setPotion] = useState([])
@@ -139,8 +142,10 @@ const AddressInfo = (addPara) => {
     event.preventDefault();
     if (submitvalidate()) {
       instance.post('/apis/youshan-m/merchantaddress/saveAddress', form).then((val) => {
-        console.log(val)
-        alert("保存成功")
+        messageApi.open({
+          type: 'success',
+          content: '保存成功',
+        });
         addPara.setChangePage(true)
         window.history.back()
       })
@@ -161,9 +166,10 @@ const AddressInfo = (addPara) => {
       }}
       noValidate
       autoComplete="off">
+      {contextHolder}
       <div className="address-back">
         <img src={backW} alt="" onClick={() => addPara.setChangePage(true)}></img>
-        <p>编辑收获地址</p>
+        <p>编辑收货地址</p>
       </div>
       <div className="address-info">
         <div >

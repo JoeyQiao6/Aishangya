@@ -17,20 +17,40 @@ const initialState = {
   products: [],
   currentItem: null,
   hasMore: [true, true],
-  rows: 10
+  resState: [true, true],
+  rows: 10,
+  searchItem: '',
+  categoroyIndex: 0,
+  pages: [0, 0],
+  searchItemState: false
 }
 export const commoditySlice = createSlice({
   name: 'commodity',
   initialState,
   reducers: {
+    SET_RESSTATE: (state, { payload }) => {
+      state.resState = payload
+    },
+    SET_SEARCHITEMSTATE: (state, { payload }) => {
+      state.searchItemState = payload
+    },
+    SET_PAGES: (state, { payload }) => {
+      state.pages = payload
+    },
     SET_HASMORE: (state, { payload }) => {
       state.hasMore = payload
     },
     SET_PRODUCTS: (state, { payload }) => {
       state.products = state.products.concat(payload)
     },
+    SET_PRODUCTS_INIT: (state, { payload }) => {
+      state.products = payload
+    },
     SET_CURRENTITEM: (state, { payload }) => {
       state.currentItem = payload
+    },
+    SET_SEARCHITEM: (state, { payload }) => {
+      state.searchItem = payload
     },
     SET_PRODUCTS_COUNT: (state, { payload }) => {
       let productsbak = JSON.parse(JSON.stringify(state.products))
@@ -48,23 +68,34 @@ export const commoditySlice = createSlice({
         }
       }
       state.products = productsbak
-    }
+    },
+    SET_LIKE: (state, { payload }) => {
+      let productsbak = JSON.parse(JSON.stringify(state.products))
+      for (let i = 0; i < productsbak.length; i++) {
+        if (productsbak[i].id === payload.pid) {
+          productsbak[i].love = payload.love;
+          break;  // 购物车
+        }
+      }
+      state.products = productsbak
+    },
   },
 })
-export const { SET_PRODUCTS, SET_CURRENTITEM, SET_HASMORE, SET_PRODUCTS_COUNT } = commoditySlice.actions
-export function commodityHomeAsync(para, hasMore, categoroyIndex) {
+export const { SET_RESSTATE, SET_SEARCHITEMSTATE, SET_PRODUCTS_INIT, SET_SEARCHITEM, SET_PAGES, SET_PRODUCTS, SET_CURRENTITEM, SET_HASMORE, SET_PRODUCTS_COUNT, SET_LIKE } = commoditySlice.actions
+export function commodityHomeAsync(para, hasMore, categoroyIndex, pages) {
   // 同步和异步 async是异步
   return async (dispatch) => {
+    dispatch(SET_SEARCHITEMSTATE(true))
     //请求后台数据的方法。面试时可以instance换成axios.post请求
     instance.post('/apis/youshan-m/merchantcommodity/selectByParam', para).then((val) => {
       //val是后端返回来的数据
       if (val.data.success) {
         val = val.data.results
-        console.log(val);
-        // val.forEach(element => {
-        //   element.count = 1
-        // });
+        dispatch(SET_SEARCHITEMSTATE(false))
         dispatch(SET_PRODUCTS(val))
+        if (val.length > 0) {
+          dispatch(SET_PAGES(pages))
+        }
         if (val.length % para.rows > 0) {
           let hasMorebak = JSON.parse(JSON.stringify(hasMore))
           hasMorebak[categoroyIndex] = false
@@ -89,6 +120,17 @@ export function setProductCount(itemData, num) {
     let productbak = JSON.parse(JSON.stringify(itemData))
     productbak.count = num
     dispatch(SET_PRODUCTS_COUNT(productbak))
+  }
+}
+export function updateLike(like) {
+  // 同步和异步 async是异步
+  return async (dispatch) => {
+    instance.post("/apis/youshan-m/merchantlike/updateLike", like).then((val) => {
+      if (val.data.success) {
+        val = val.data.results
+        dispatch(SET_LIKE({ pid: like.pid, love: val === 'DELETE' ? null : like.pid }))
+      }
+    })
   }
 }
 //导出commodity ，让他可以在其他的页面使用，使用方法如下：

@@ -12,18 +12,18 @@ const Address = () => {
   const [addInfo, setAddInfo] = useState({})
   const renderRef = useRef(true); // 防止useEffect执行两次
   const initAdd = () => {
-    instance.post('/apis/youshan-m/merchantaddress/queryByUname').then((val) => {
+    instance.post('/apis/youshan-m/merchantaddress/queryByUid').then((val) => {
       if (val.data.success) {
         setAddList(val.data.results)
       }
     })
   }
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
     instance.post('/apis/common/dictionary/queryByGroupIds', ["social_type"]).then((val) => {
       if (val.status === 200) {
         setSocialType(val.data.social_type)
@@ -34,7 +34,6 @@ const Address = () => {
     }
   }, [changePage])
   const selectItem = (val) => {
-    console.log(val);
     setAddInfo(val)
     setChangePage(false)
   }

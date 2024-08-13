@@ -1,38 +1,38 @@
 import React from 'react';
 import './index.less';
-import logo from "../../assets/imgs/profile/logo1.png";
-import { LockOutlined, UserOutlined, MailOutlined, MobileOutlined, HomeOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
-import picture from "../../assets/imgs/login/picture.png"
-import edit from "../../assets/imgs/login/edit.png"
+import logo from "../../assets/imgs/logo/logo1.png";
+import { LockOutlined, UserOutlined, MailOutlined, MobileOutlined, ShopOutlined, HomeOutlined } from '@ant-design/icons';
+import { Button, Form, Input, message } from 'antd';
 import { Link } from "react-router-dom"
 import instance from '../../service/request';
 import { Dialog } from 'antd-mobile'
 const Login = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const pageHeight = document.documentElement.scrollHeight - 75;
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
     instance.post('/apis/common/merchantuseradd/add', values).then((val) => {
-      console.log(val);
       if (val.data.success) {
-
         Dialog.alert({
-          content: '创建成功',
+          content: val.data.results,
           closeOnMaskClick: true,
         })
         window.location.href = "/#/Login"
+      } else {
+        messageApi.open({
+          type: 'error',
+          content: val.data.results,
+        });
       }
     })
   }
   return (
-    <div className='register'>
+    <div className='register' >
+      {contextHolder}
       <div className='login-logo'>
         <img src={logo} alt="" onClick={() => { window.location.href = "/#/" }}></img>
       </div>
-      <div className='login-picture'>
-        <img src={picture} alt=""></img>
-        <img src={edit} alt=""></img>
-      </div>
       <Form
+        style={{ overflowY: "auto", height: pageHeight }}
         name="normal_login"
         className="login-form"
         initialValues={{
@@ -51,7 +51,13 @@ const Login = () => {
             },
           ]}
         >
-          <Input prefix={<HomeOutlined className="site-form-item-icon" />} placeholder="店铺名称" />
+          <Input prefix={<ShopOutlined className="site-form-item-icon" />} placeholder="店铺名称" />
+        </Form.Item>
+        <Form.Item
+          name="name"
+          autoComplete="off"
+        >
+          <Input prefix={<HomeOutlined className="site-form-item-icon" />} placeholder="公司名" />
         </Form.Item>
         <Form.Item
           name="uname"

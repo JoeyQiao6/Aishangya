@@ -15,25 +15,26 @@ const Like = () => {
   const dispatch = useDispatch()
   const renderRef = useRef(true); // 防止useEffect执行两次
   const { likes } = useSelector(likeSelector)
+  const pageHeight = document.documentElement.scrollHeight - 34 - 30 - 75 - 10;
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
-    if (likes.length === 0) {
-      dispatch(getLike({}))
-    }
-  }, [dispatch, likes.length])
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
+    dispatch(getLike({}))
+  }, [dispatch])
   return (
     <div className="like">
       <Header >
         <img src={backW} alt="" onClick={() => { window.history.back() }}></img>
         <Title>我的收藏</Title>
       </Header>
-      {Object.keys(likes).map((key, index) => (
-        <Item key={index} itemData={likes[key]} />
-      ))}
+      <div style={{ overflowY: "auto", height: pageHeight }}>
+        {Object.keys(likes).map((key, index) => (
+          <Item key={index} itemData={likes[key]} />
+        ))}
+      </div>
       <Footer />
 
     </div>

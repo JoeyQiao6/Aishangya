@@ -5,6 +5,7 @@ import backW from "../../assets/imgs/details/back-w.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { orderSelector, getOrderWithImageById, getImageByIds } from "../../redux/order/order"
 import { cartSelector } from "../../redux/shopping/cart"
+import Footer from '../../components/footer';
 import Item from './item'
 
 const OneMore = () => {
@@ -14,13 +15,13 @@ const OneMore = () => {
   const [products, setProducts] = useState({})
   const { currentOrder } = useSelector(orderSelector)
   const { cart } = useSelector(cartSelector)
-
+  const pageHeight = document.documentElement.scrollHeight - 34 - 30 - 75 - 10;
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
     dispatch(getOrderWithImageById(para.id))
   }, [para.id, dispatch])
   useEffect(() => {
@@ -46,9 +47,12 @@ const OneMore = () => {
         <img src={backW} alt="" onClick={() => { window.history.back() }}></img>
         <p>再来一单</p>
       </div>
-      {Object.keys(products).map((key, index) => (
-        <Item key={index} itemData={products[key]} />
-      ))}
+      <div style={{ overflowY: "auto", height: pageHeight }}>
+        {Object.keys(products).map((key, index) => (
+          <Item key={index} itemData={products[key]} />
+        ))}
+      </div>
+      <Footer />
     </div >
   );
 };

@@ -17,6 +17,8 @@ import {
 import { PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import backW from '../../assets/imgs/details/back-w.svg'
 import instance from '../../service/request';
+import { setAddSelect } from "../../redux/shopping/cart"
+import { useDispatch } from "react-redux";
 const { Option } = Select;
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -31,7 +33,7 @@ const AddressCard = ({ address, onEdit, onDelete }) => {
       <div className="address_content">
         <Row>
           <Col>
-            <p className="name">{address.receive}</p>
+            <p className="name">{address.receive}  {address.state === 1 && "( 默认地址 )"}</p>
           </Col>
           <Col>
             <p className="phone">{address.phone}</p>
@@ -48,6 +50,7 @@ const AddressCard = ({ address, onEdit, onDelete }) => {
 };
 
 const AddressAll = () => {
+  const dispatch = useDispatch()
   const [addresses, setAddresses] = useState([]);
   const [form] = Form.useForm();
 
@@ -59,6 +62,7 @@ const AddressAll = () => {
   const renderRef = useRef(true); // 防止useEffect执行两次
   const { confirm } = Modal;
   const addAddress = () => {
+    setEditingAddress(null)
     form.setFieldsValue({
       id: "",
       receive: "",
@@ -77,23 +81,24 @@ const AddressAll = () => {
     setVisible(true);
   };
   useEffect(() => {
-    if (renderRef.current) {
-      // 防止useEffect执行两次
-      renderRef.current = false
-      return
-    }
+    // if (renderRef.current) {
+    //   // 防止useEffect执行两次
+    //   renderRef.current = false
+    //   return
+    // }
     instance.post('/apis/common/dictionary/queryByGroupIds', ["social_type"]).then((val) => {
       if (val.status === 200) {
+        console.log(val.data.social_type);
         setSocialType(val.data.social_type)
       }
     })
     initAddress()
   }, [])
   const initAddress = () => {
-    instance.post('/apis/youshan-m/merchantaddress/queryByUname').then((val) => {
+    instance.post('/apis/youshan-m/merchantaddress/queryByUid').then((val) => {
       if (val.data.success) {
         setAddresses([])
-        setAddresses(val.data.results)
+        setAddresses(val.data.results["address"])
       }
     })
   };
@@ -123,6 +128,12 @@ const AddressAll = () => {
             ...values,
           };
           add = newAddress
+          if (addresses.length === 0) {
+            add.state = 1
+            addresses.forEach(element => {
+              element.state = 0
+            });
+          }
           setAddresses([...addresses, newAddress]);
         }
         instance.post('/apis/youshan-m/merchantaddress/saveAddress', add).then((val) => {
@@ -165,6 +176,7 @@ const AddressAll = () => {
               content: '删除成功',
             });
             setAddresses(addresses.filter((addr) => addr.id !== id));
+            dispatch(setAddSelect({}))
           }
         })
       },
@@ -175,11 +187,12 @@ const AddressAll = () => {
   };
 
   const editAddress = (address) => {
+    console.log(address);
     form.setFieldsValue({
       id: address.id,
       receive: address.receive,
       phone: address.phone,
-      socialtype: address.socialtype,
+      socialtype: address.socialtype.toString(),
       socialaccount: address.socialaccount,
       postcode: address.postcode,
       prefecture: address.prefecture,
@@ -229,10 +242,11 @@ const AddressAll = () => {
   }
   const changeDef = () => {
     form.setFieldsValue({
-      "state": def ? 0 : 1,
+      "state": !def ? 0 : 1,
     });
     setDef(!def)
   }
+  const pageHeight = document.documentElement.scrollHeight - 34 - 64 - 63 - 30;
   return (
     <Layout className="addressall_page">
       {contextHolder}
@@ -240,7 +254,7 @@ const AddressAll = () => {
         <img src={backW} alt="" onClick={() => { window.history.back() }}></img>
         <Title>我的收货地址</Title>
       </Header>
-      <Content>
+      <Content style={{ height: pageHeight }}>
         <Row gutter={[16, 16]}>
           {addresses.map((address) => (
             <Col key={address.id} xs={24} sm={12} md={8} lg={6}>
@@ -334,7 +348,6 @@ const AddressAll = () => {
               label="房间号码"
               name="roomnumber"
               rules={[
-                { required: true, message: "请输入房间号码！" },
               ]}
             >
               <Input />
@@ -343,7 +356,6 @@ const AddressAll = () => {
               label="公寓名称或公司名称"
               name="building"
               rules={[
-                { required: true, message: "请输入公寓名称或公司名称！" },
               ]}
             >
               <Input />
@@ -352,7 +364,6 @@ const AddressAll = () => {
               label="手机号码"
               name="phone"
               rules={[
-                { required: true, message: "请输入手机号码！" },
                 {
                   pattern: /^0[789]0\d{8}$/,
                   message: "请输入有效的手机号码！",
